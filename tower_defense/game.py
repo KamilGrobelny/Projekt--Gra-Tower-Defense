@@ -2,7 +2,7 @@ import pygame
 
 from settings import (
     WIDTH, HEIGHT, WHITE, DARK_GRAY, FONT,
-    STARTING_MONEY, TOWER_COST, ENEMY_REWARD,
+    STARTING_MONEY, TOWER1_COST, TOWER2_COST, TOWER3_COST, TOWER4_COST, ENEMY_REWARD,
 )
 from grid import draw_grid
 from enemy import Enemy
@@ -73,9 +73,9 @@ def game_loop(win, path_tiles):
                         selected_tile != (tower.x // 50, tower.y // 50)
                         for tower in towers
                     ):
-                        if money >= TOWER_COST:
+                        if money >= TOWER1_COST:
                             towers.append(Tower(*selected_tile))
-                            money -= TOWER_COST
+                            money -= TOWER1_COST
                             selected_tile = None
 
                 elif my < HEIGHT - 50:

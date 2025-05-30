@@ -36,7 +36,7 @@ class Tower:
         win.blit(self.image, (image_x, image_y))
         pygame.draw.circle(win, DARK_GRAY, (self.x, self.y), self.range, 1)
 
-    def shoot(self, enemies):
+    def shoot(self, enemies, name):
         if self.timer > 0:
             self.timer -= 1
             return

@@ -95,7 +95,8 @@ def game_loop(win, path_tiles):
 
                 elif my < HEIGHT - 50:
                     grid_x, grid_y = mx // 50, my // 50
-                    if (grid_x, grid_y) not in path_tiles
+                    if (grid_x, grid_y) not in path_tiles:
+                        selected_tile = (grid_x, grid_y)
 
                 if (
                     tower_button[1].collidepoint(mx, my)
@@ -113,7 +114,8 @@ def game_loop(win, path_tiles):
 
                 elif my < HEIGHT - 50:
                     grid_x, grid_y = mx // 50, my // 50
-                    if (grid_x, grid_y) not in path_tiles
+                    if (grid_x, grid_y) not in path_tiles:
+                        selected_tile = (grid_x, grid_y)
 
                 if (
                     tower_button[2].collidepoint(mx, my)
@@ -131,7 +133,8 @@ def game_loop(win, path_tiles):
 
                 elif my < HEIGHT - 50:
                     grid_x, grid_y = mx // 50, my // 50
-                    if (grid_x, grid_y) not in path_tiles
+                    if (grid_x, grid_y) not in path_tiles:
+                        selected_tile = (grid_x, grid_y)
 
                     
                 if (

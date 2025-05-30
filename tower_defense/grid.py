@@ -11,7 +11,6 @@ def draw_grid(win, path_tiles, selected=None):
                 pygame.draw.rect(win, BLUE, rect)
             elif (x, y) in path_tiles:
                 pygame.draw.rect(win, BROWN, rect)
-            """ najpierw zaznacza, aby wieżę 4 (barykadę) można było postawić w zaznaczonym miejscu na ścieżce """
             else:
                 pygame.draw.rect(win, GRAY, rect)
             pygame.draw.rect(win, DARK_GRAY, rect, 1)

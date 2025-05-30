@@ -6,7 +6,7 @@ from settings import (
 )
 from grid import draw_grid
 from enemy import Enemy
-from tower import Tower
+from tower import Tower1, Tower2, Tower3, Tower4
 
 def button_rect(a):
     return pygame.Rect(10 + 130 * a, HEIGHT - 40, 120, 30)
@@ -54,13 +54,20 @@ def game_loop(win, path_tiles):
                 enemies.remove(enemy)
 
         for tower in towers:
-            tower.shoot(enemies)
+            if isinstance(tower, Tower1):
+                tower.shoot(enemies, 1)
+            elif isinstance(tower, Tower1):
+                tower.shoot(enemies, 2)
+            elif isinstance(tower, Tower1):
+                tower.shoot(enemies, 3)
+            else:
+                tower.shoot(enemies, 4)
 
         for number in range(4):
             pygame.draw.rect(win, DARK_GRAY, tower_button[number])
             win.blit(
-                FONT.render(f"Wieża {number+1}", True, WHITE),
-                (35+130*number, HEIGHT - 35),
+                FONT.render(f"Wieża {number + 1}", True, WHITE),
+                (35 + 130 * number, HEIGHT - 35),
             )
 
         pygame.display.update()
@@ -72,26 +79,61 @@ def game_loop(win, path_tiles):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
 
-                for number in range(3):
-                    if (
-                        tower_button[number].collidepoint(mx, my)
-                        and selected_tile
-                        and selected_tile not in path_tiles
-                    ):
-                        if all(
+                if (
+                    tower_button[0].collidepoint(mx, my)
+                    and selected_tile
+                    and selected_tile not in path_tiles
+                ):
+                    if all(
                             selected_tile != (tower.x // 50, tower.y // 50)
                             for tower in towers
-                        ):
-                            if money >= TOWER_COST:
-                                towers.append(Tower(*selected_tile))
-                                money -= TOWER_COST
-                                selected_tile = None
+                    ):
+                        if money >= TOWER_COST:
+                            towers.append(Tower1(*selected_tile))
+                            money -= TOWER_COST
+                            selected_tile = None
 
-                    elif my < HEIGHT - 50:
-                        grid_x, grid_y = mx // 50, my // 50
-                        if (grid_x, grid_y) not in path_tiles:
-                            selected_tile = (grid_x, grid_y)
+                elif my < HEIGHT - 50:
+                    grid_x, grid_y = mx // 50, my // 50
+                    if (grid_x, grid_y) not in path_tiles
 
+                if (
+                    tower_button[1].collidepoint(mx, my)
+                    and selected_tile
+                    and selected_tile not in path_tiles
+                ):
+                    if all(
+                            selected_tile != (tower.x // 50, tower.y // 50)
+                            for tower in towers
+                    ):
+                        if money >= TOWER_COST:
+                            towers.append(Tower2(*selected_tile))
+                            money -= TOWER_COST
+                            selected_tile = None
+
+                elif my < HEIGHT - 50:
+                    grid_x, grid_y = mx // 50, my // 50
+                    if (grid_x, grid_y) not in path_tiles
+
+                if (
+                    tower_button[2].collidepoint(mx, my)
+                    and selected_tile
+                    and selected_tile not in path_tiles
+                ):
+                    if all(
+                            selected_tile != (tower.x // 50, tower.y // 50)
+                            for tower in towers
+                    ):
+                        if money >= TOWER_COST:
+                            towers.append(Tower3(*selected_tile))
+                            money -= TOWER_COST
+                            selected_tile = None
+
+                elif my < HEIGHT - 50:
+                    grid_x, grid_y = mx // 50, my // 50
+                    if (grid_x, grid_y) not in path_tiles
+
+                    
                 if (
                     tower_button[3].collidepoint(mx, my)
                     and selected_tile
@@ -102,7 +144,7 @@ def game_loop(win, path_tiles):
                             for tower in towers
                     ):
                         if money >= TOWER_COST:
-                            towers.append(Tower(*selected_tile))
+                            towers.append(Tower4(*selected_tile))
                             money -= TOWER_COST
                             selected_tile = None
 

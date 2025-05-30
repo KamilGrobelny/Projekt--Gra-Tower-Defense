@@ -1,6 +1,6 @@
 import pygame
 import math
-from settings import TILE_SIZE, RED, GREEN
+from settings import TILE_SIZE, RED, GREEN, BAR_WIDTH, BAR_HEIGHT
 
 
 class Enemy:
@@ -32,12 +32,9 @@ class Enemy:
     def draw(self, win):
         pygame.draw.circle(win, RED, (int(self.x), int(self.y)), 10)
 
-        bar_width = 40
-        bar_height = 5
-        bar_x = self.x - bar_width // 2
+        bar_x = self.x - BAR_WIDTH // 2
         bar_y = self.y - 20
-
-        pygame.draw.rect(win, RED, (bar_x, bar_y, bar_width, bar_height))
-
-        current_width = bar_width * (self.hp / 100)
-        pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, bar_height))
+        current_width = BAR_WIDTH * (self.hp / 100)
+        
+        pygame.draw.rect(win, RED, (bar_x, bar_y, BAR_WIDTH, BAR_HEIGHT))
+        pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))

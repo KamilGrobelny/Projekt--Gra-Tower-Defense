@@ -24,4 +24,4 @@ BAR_HEIGHT = 5
 
 ENEMY_DATA = {'small':{'hp':50, 'speed':1.5, 'image':'images/enemy_small.png'},
                'normal':{'hp':100, 'speed':1, 'image':'images/enemy_normal.png'},
-               'boss':{'hp':200, 'speed':1.2, 'image':'images/enemy_boss.png'}}
+               'boss':{'hp':200, 'speed':0.4, 'image':'images/enemy_boss.png'}}

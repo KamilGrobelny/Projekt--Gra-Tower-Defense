@@ -15,6 +15,7 @@ def button_rect(a):
 def game_loop(win, path_tiles):
     towers = []
     enemies = []
+    dying_enemies = []
     selected_tile = None
     spawn_timer = 0
     tower_button = [
@@ -41,10 +42,7 @@ def game_loop(win, path_tiles):
         money_text = FONT.render(f"Pieniądze: {money}", True, DARK_GRAY)
         win.blit(money_text, (WIDTH - 180, HEIGHT - 35))
 
-        for tower in towers:
-            tower.draw(win)
-
-        for enemy in enemies[:]:
+        for enemy in enemies:
             enemy.move()
             enemy.rotate()
             enemy.draw(win)
@@ -52,10 +50,18 @@ def game_loop(win, path_tiles):
             if enemy.hp <= 0:
                 money += ENEMY_REWARD.get(enemy.type)
                 enemies.remove(enemy)
+                dying_enemies.append(enemy)
 
             elif enemy.path_index >= len(enemy.path) - 1:
                 enemies.remove(enemy)
 
+        for enemy in dying_enemies:
+            if enemy.death(win):
+                dying_enemies.remove(enemy)
+
+        for tower in towers:
+            tower.draw(win)
+        
         for tower in towers:
             if isinstance(tower, Tower1):
                 tower.shoot(enemies, 1)

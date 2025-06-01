@@ -1,12 +1,14 @@
 import pygame
 import math
+import random
 from settings import TILE_SIZE, RED, GREEN, BAR_WIDTH, BAR_HEIGHT, ENEMY_DATA
 
 
 class Enemy:
     def __init__(self, path_coords, enemy_type):
+        offset = random.randint(-20,20)
         self.path = [
-            (x * TILE_SIZE + TILE_SIZE // 2, y * TILE_SIZE + TILE_SIZE // 2)
+            (x * TILE_SIZE + TILE_SIZE // 2 + offset, y * TILE_SIZE + TILE_SIZE // 2 + offset)
             for x, y in path_coords
         ]
         self.x, self.y = self.path[0]
@@ -36,10 +38,7 @@ class Enemy:
             self.y += dy / dist * self.speed
 
     def draw(self, win):
-        image = self.image.get_rect()
-        image_x = self.x - image.width // 2
-        image_y = self.y - image.height // 2
-        win.blit(self.image, (image_x, image_y))
+        win.blit(self.image, self.image_top_left_corner())
 
         bar_x = self.x - BAR_WIDTH // 2
         bar_y = self.y - 20
@@ -58,3 +57,20 @@ class Enemy:
 
         self.angle = math.degrees(math.atan2(-move_vect[1], move_vect[0])) - 90
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
+
+    def image_top_left_corner(self):
+        # zwraca współrzędne lewego górnego rogu prostokąta reprezentującego obraz przeciwnika
+        image = self.image.get_rect()
+        image_x = self.x - image.width // 2
+        image_y = self.y - image.height // 2
+        return (image_x, image_y)
+    
+    def death(self, win, step = 10):
+        #animacja znikania przeciwników
+        alpha = self.image.get_alpha()
+        alpha = max(0, alpha - step)
+        self.image.set_alpha(alpha)
+        win.blit(self.image, self.image_top_left_corner())
+        return alpha == 0
+
+# TODO ujednolicić punkt startpoint i endpoint

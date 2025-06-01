@@ -1,4 +1,5 @@
 import pygame
+from random import choice
 
 from settings import (
     WIDTH, HEIGHT, WHITE, DARK_GRAY, FONT,
@@ -32,7 +33,7 @@ def game_loop(win, path_tiles):
         spawn_timer += 1
 
         if spawn_timer >= 120:
-            enemies.append(Enemy(path_tiles))
+            enemies.append(Enemy(path_tiles, choice(['small', 'normal', 'boss'])))
             spawn_timer = 0
 
         draw_grid(win, path_tiles, selected_tile)
@@ -45,11 +46,13 @@ def game_loop(win, path_tiles):
 
         for enemy in enemies[:]:
             enemy.move()
+            enemy.rotate()
             enemy.draw(win)
 
             if enemy.hp <= 0:
-                money += ENEMY_REWARD
+                money += ENEMY_REWARD.get(enemy.type)
                 enemies.remove(enemy)
+
             elif enemy.path_index >= len(enemy.path) - 1:
                 enemies.remove(enemy)
 

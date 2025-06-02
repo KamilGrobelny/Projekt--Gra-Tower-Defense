@@ -3,17 +3,26 @@ from random import choice
 
 from settings import (
     WIDTH, HEIGHT, WHITE, DARK_GRAY, FONT,
-    STARTING_MONEY, TOWER_COST, ENEMY_REWARD,
+    STARTING_MONEY, TOWER_COST, ENEMY_REWARD
 )
 from grid import draw_grid
 from enemy import Enemy
-from tower import Tower1, Tower2, Tower3, Tower4
+from tower import Tower
 
 def button_rect(a):
     return pygame.Rect(10 + 130 * a, HEIGHT - 40, 120, 30)
 
 def game_loop(win, path_tiles):
-    towers = []
+    towers1 = []
+    towers2 = []
+    towers3 = []
+    towers4 = []
+    towers = [
+        towers1,
+        towers2,
+        towers3,
+        towers4
+    ]
     enemies = []
     dying_enemies = []
     selected_tile = None
@@ -22,7 +31,7 @@ def game_loop(win, path_tiles):
         button_rect(0),
         button_rect(1),
         button_rect(2),
-        button_rect(3),
+        button_rect(3)
     ]
     clock = pygame.time.Clock()
     run = True
@@ -59,18 +68,13 @@ def game_loop(win, path_tiles):
             if enemy.death(win):
                 dying_enemies.remove(enemy)
 
-        for tower in towers:
-            tower.draw(win)
+        for number in range(4):
+            for tower in towers[number]:
+                tower.draw(win, number + 1)
         
-        for tower in towers:
-            if isinstance(tower, Tower1):
-                tower.shoot(enemies, 1)
-            elif isinstance(tower, Tower2):
-                tower.shoot(enemies, 2)
-            elif isinstance(tower, Tower3):
-                tower.shoot(enemies, 3)
-            else:
-                tower.shoot(enemies, 4)
+        for number in range(4):
+            for tower in towers[number]:
+                tower.shoot(enemies, number + 1)
 
         for number in range(4):
             pygame.draw.rect(win, DARK_GRAY, tower_button[number])
@@ -88,79 +92,27 @@ def game_loop(win, path_tiles):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
 
-                if (
-                    tower_button[0].collidepoint(mx, my)
-                    and selected_tile
-                    and selected_tile not in path_tiles
-                ):
-                    if all(
-                            selected_tile != (tower.x // 50, tower.y // 50)
-                            for tower in towers
+                for number in range(4):
+                    condition = [
+                        selected_tile not in path_tiles,
+                        selected_tile not in path_tiles,
+                        selected_tile not in path_tiles,
+                        selected_tile in path_tiles
+                    ]
+                    if (
+                        tower_button[3].collidepoint(mx, my)
+                        and selected_tile
+                        and condition[number]
                     ):
-                        if money >= TOWER_COST:
-                            towers.append(Tower1(*selected_tile))
-                            money -= TOWER_COST
-                            selected_tile = None
-
-                elif my < HEIGHT - 50:
-                    grid_x, grid_y = mx // 50, my // 50
-                    if (grid_x, grid_y) not in path_tiles:
-                        selected_tile = (grid_x, grid_y)
-
-                if (
-                    tower_button[1].collidepoint(mx, my)
-                    and selected_tile
-                    and selected_tile not in path_tiles
-                ):
-                    if all(
+                        if all(
                             selected_tile != (tower.x // 50, tower.y // 50)
-                            for tower in towers
-                    ):
-                        if money >= TOWER_COST:
-                            towers.append(Tower2(*selected_tile))
-                            money -= TOWER_COST
-                            selected_tile = None
+                            for tower in towers1 or towers2 or towers3 or towers4
+                        ):
+                            if money >= TOWER_COST:
+                                towers[number].append(Tower(*selected_tile, number + 1))
+                                money -= TOWER_COST
+                                selected_tile = None
 
-                elif my < HEIGHT - 50:
-                    grid_x, grid_y = mx // 50, my // 50
-                    if (grid_x, grid_y) not in path_tiles:
-                        selected_tile = (grid_x, grid_y)
-
-                if (
-                    tower_button[2].collidepoint(mx, my)
-                    and selected_tile
-                    and selected_tile not in path_tiles
-                ):
-                    if all(
-                            selected_tile != (tower.x // 50, tower.y // 50)
-                            for tower in towers
-                    ):
-                        if money >= TOWER_COST:
-                            towers.append(Tower3(*selected_tile))
-                            money -= TOWER_COST
-                            selected_tile = None
-
-                elif my < HEIGHT - 50:
-                    grid_x, grid_y = mx // 50, my // 50
-                    if (grid_x, grid_y) not in path_tiles:
-                        selected_tile = (grid_x, grid_y)
-
-                    
-                if (
-                    tower_button[3].collidepoint(mx, my)
-                    and selected_tile
-                    and selected_tile in path_tiles
-                ):
-                    if all(
-                            selected_tile != (tower.x // 50, tower.y // 50)
-                            for tower in towers
-                    ):
-                        if money >= TOWER_COST:
-                            towers.append(Tower4(*selected_tile))
-                            money -= TOWER_COST
-                            selected_tile = None
-
-                elif my < HEIGHT - 50:
-                    grid_x, grid_y = mx // 50, my // 50
-                    if (grid_x, grid_y) in path_tiles:
+                    elif my < HEIGHT - 50:
+                        grid_x, grid_y = mx // 50, my // 50
                         selected_tile = (grid_x, grid_y)

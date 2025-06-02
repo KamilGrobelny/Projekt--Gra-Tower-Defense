@@ -12,22 +12,22 @@ class Tower:
         if name == 1:
             self.range = 100
             self.cooldown = 60
-            self.image = pygame.image.load("tower1.png")
+            self.image = pygame.image.load("images/tower1.png")
 
         elif name == 2:
             self.range = 100
             self.cooldown = 100
-            self.image = pygame.image.load("tower1.png")
+            self.image = pygame.image.load("images/tower1.png")
 
         elif name == 3:
             self.range = 150
             self.cooldown = 110
-            self.image = pygame.image.load("tower1.png")
+            self.image = pygame.image.load("images/tower1.png")
 
         else:
             self.range = 0
             self.cooldown = 0
-            self.image = pygame.image.load("tower1.png")
+            self.image = pygame.image.load("images/tower1.png")
 
     def draw(self, win):
         image = self.image.get_rect()
@@ -52,9 +52,8 @@ class Tower:
                 self.timer = self.cooldown
                 break
         
-        enemies_for_tower3 = []
-        
         if name == 3:
+            enemies_for_tower3 = []
             for enemy in enemies:
                 if math.hypot(enemy.x - self.x, enemy.y - self.y) <= self.range:
                     enemies_for_tower3.append(enemy)

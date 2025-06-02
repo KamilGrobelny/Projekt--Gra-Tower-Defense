@@ -100,7 +100,7 @@ def game_loop(win, path_tiles):
                         selected_tile in path_tiles
                     ]
                     if (
-                        tower_button[3].collidepoint(mx, my)
+                        tower_button[number].collidepoint(mx, my)
                         and selected_tile
                         and condition[number]
                     ):

@@ -30,7 +30,7 @@ class Tower:
             self.image = pygame.image.load("images/tower1.png")
             self.hp = 100
 
-    def draw(self, win):
+    def draw(self, win, name):
         image = self.image.get_rect()
         image_x = self.x - image.width // 2
         image_y = self.y - image.height // 2

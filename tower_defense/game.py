@@ -65,9 +65,9 @@ def game_loop(win, path_tiles):
         for tower in towers:
             if isinstance(tower, Tower1):
                 tower.shoot(enemies, 1)
-            elif isinstance(tower, Tower1):
+            elif isinstance(tower, Tower2):
                 tower.shoot(enemies, 2)
-            elif isinstance(tower, Tower1):
+            elif isinstance(tower, Tower3):
                 tower.shoot(enemies, 3)
             else:
                 tower.shoot(enemies, 4)

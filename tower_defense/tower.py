@@ -28,6 +28,7 @@ class Tower:
             self.range = 0
             self.cooldown = 0
             self.image = pygame.image.load("images/tower1.png")
+            self.hp = 100
 
     def draw(self, win):
         image = self.image.get_rect()
@@ -35,6 +36,12 @@ class Tower:
         image_y = self.y - image.height // 2
         win.blit(self.image, (image_x, image_y))
         pygame.draw.circle(win, DARK_GRAY, (self.x, self.y), self.range, 1)
+        if name == 4:
+            bar_x = self.x - BAR_WIDTH // 2
+            bar_y = self.y - 25
+            current_width = BAR_WIDTH * (self.hp / 100)
+            pygame.draw.rect(win, RED, (bar_x, bar_y, BAR_WIDTH, BAR_HEIGHT))
+            pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))
 
     def shoot(self, enemies, name):
         if self.timer > 0:
@@ -61,29 +68,3 @@ class Tower:
             for enemy in enemies_for_tower3:
                 enemy.hp -= 10
             self.timer = self.cooldown
-
-class Tower1(Tower):
-    def __init__(self, grid_x, grid_y):
-        Tower.__init__(self, grid_x, grid_y, 1)
-
-class Tower2(Tower):
-    def __init__(self, grid_x, grid_y):
-        Tower.__init__(self, grid_x, grid_y, 2)
-
-class Tower3(Tower):
-    def __init__(self, grid_x, grid_y):
-        Tower.__init__(self, grid_x, grid_y, 3)
-
-class Tower4(Tower):
-    def __init__(self, grid_x, grid_y):
-        Tower.__init__(self, grid_x, grid_y, 4)
-        self.hp = 100
-
-    def draw(self, win):
-        Tower.draw(self, win)
-        bar_x = self.x - BAR_WIDTH // 2
-        bar_y = self.y - 25
-        current_width = BAR_WIDTH * (self.hp / 100)
-        
-        pygame.draw.rect(win, RED, (bar_x, bar_y, BAR_WIDTH, BAR_HEIGHT))
-        pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))

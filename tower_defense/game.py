@@ -7,22 +7,14 @@ from settings import (
 )
 from grid import draw_grid
 from enemy import Enemy
-from tower import Tower
+from tower import Tower, Tower_level_up
 
 def button_rect(a):
     return pygame.Rect(10 + 130 * a, HEIGHT - 40, 120, 30)
 
 def game_loop(win, path_tiles):
-    towers1 = []
-    towers2 = []
-    towers3 = []
-    towers4 = []
-    towers = [
-        towers1,
-        towers2,
-        towers3,
-        towers4
-    ]
+    towers = [[], [], [], []]
+    towers_level_up = [[], [], [], []]
     enemies = []
     dying_enemies = []
     selected_tile = None
@@ -71,9 +63,13 @@ def game_loop(win, path_tiles):
         for number in range(4):
             for tower in towers[number]:
                 tower.draw(win, number + 1)
+            for tower in towers_level_up[number]:
+                tower.draw(win, number + 1)
         
         for number in range(4):
             for tower in towers[number]:
+                tower.shoot(enemies, number + 1)
+            for tower in towers_level_up[number]:
                 tower.shoot(enemies, number + 1)
 
         for number in range(4):
@@ -112,6 +108,15 @@ def game_loop(win, path_tiles):
                                 towers[number].append(Tower(*selected_tile, number + 1))
                                 money -= TOWER_COST
                                 selected_tile = None
+
+                        for tower in towers[number]:
+                            if selected_tile == (tower.x // 50, tower.y // 50):
+                                if money >= TOWER_COST:
+                                    towers[number].remove(tower)
+                                    towers_level_up[number].append(Tower_level_up(*selected_tile, number + 1))
+                                    money -= TOWER_COST
+                                    selected_tile = None
+                                    break
 
                     elif my < HEIGHT - 50:
                         grid_x, grid_y = mx // 50, my // 50

@@ -68,3 +68,27 @@ class Tower:
             for enemy in enemies_for_tower3:
                 enemy.hp -= 10
             self.timer = self.cooldown
+
+class Tower_level_up(Tower):
+    def __init__(self, grid_x, grid_y, name):
+        Tower.__init__(self, grid_x, grid_y, name)
+        if name == 1:
+            self.range = 100
+            self.cooldown = 60
+            self.image = pygame.image.load("images/tower2.png")
+
+        elif name == 2:
+            self.range = 100
+            self.cooldown = 100
+            self.image = pygame.image.load("images/tower2.png")
+
+        elif name == 3:
+            self.range = 150
+            self.cooldown = 110
+            self.image = pygame.image.load("images/tower2.png")
+
+        else:
+            self.range = 0
+            self.cooldown = 0
+            self.image = pygame.image.load("images/tower2.png")
+            self.hp = 100

@@ -102,7 +102,8 @@ def game_loop(win, path_tiles):
                     ):
                         if all(
                             selected_tile != (tower.x // 50, tower.y // 50)
-                            for tower in towers1 or towers2 or towers3 or towers4
+                            for list in towers + towers_level_up
+                                for tower in list
                         ):
                             if money >= TOWER_COST:
                                 towers[number].append(Tower(*selected_tile, number + 1))

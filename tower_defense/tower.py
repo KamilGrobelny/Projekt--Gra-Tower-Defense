@@ -28,7 +28,7 @@ class Tower:
         if name == 4:
             bar_x = self.x - BAR_WIDTH // 2
             bar_y = self.y - 25
-            current_width = BAR_WIDTH * (self.hp / 100)
+            current_width = BAR_WIDTH * (self.hp / self.max_hp)
             pygame.draw.rect(win, RED, (bar_x, bar_y, BAR_WIDTH, BAR_HEIGHT))
             pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))
 

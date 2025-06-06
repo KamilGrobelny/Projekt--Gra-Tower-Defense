@@ -62,8 +62,10 @@ def game_loop(win, path_tiles):
 
         for number in range(4):
             for tower in towers[number]:
+                tower.rotate(enemies)
                 tower.draw(win, number + 1)
             for tower in towers_level_up[number]:
+                tower.rotate(enemies)
                 tower.draw(win, number + 1)
         
         for number in range(4):

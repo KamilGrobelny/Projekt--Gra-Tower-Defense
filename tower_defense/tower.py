@@ -1,7 +1,7 @@
 import math
 import pygame
 
-from settings import TILE_SIZE, DARK_GRAY, RED, GREEN, BAR_WIDTH, BAR_HEIGHT
+from settings import TILE_SIZE, DARK_GRAY, RED, GREEN, BAR_WIDTH, BAR_HEIGHT, TOWER_DATA, TOWER_LEVEL_UP_DATA
 
 
 class Tower:
@@ -9,26 +9,15 @@ class Tower:
         self.x = grid_x * TILE_SIZE + TILE_SIZE // 2
         self.y = grid_y * TILE_SIZE + TILE_SIZE // 2
         self.timer = 0
-        if name == 1:
-            self.range = 100
-            self.cooldown = 60
-            self.image = pygame.image.load("images/tower1.png")
-
-        elif name == 2:
-            self.range = 100
-            self.cooldown = 100
-            self.image = pygame.image.load("images/tower1.png")
-
-        elif name == 3:
-            self.range = 150
-            self.cooldown = 110
-            self.image = pygame.image.load("images/tower1.png")
-
-        else:
-            self.range = 0
-            self.cooldown = 0
-            self.image = pygame.image.load("images/tower1.png")
-            self.hp = 100
+        self.range = TOWER_DATA[name]['range']
+        self.cooldown = TOWER_DATA[name]['cooldown']
+        self.damage = TOWER_DATA[name]['damage']
+        self.angle = 0
+        self.orig_image = pygame.image.load(TOWER_DATA[name]['image'])
+        self.image = pygame.transform.rotate(self.orig_image, self.angle)
+        if name == 4:
+            self.hp = TOWER_DATA[name]['hp']
+            self.max_hp = TOWER_DATA[name]['hp']
 
     def draw(self, win, name):
         image = self.image.get_rect()
@@ -53,9 +42,7 @@ class Tower:
                 break
             dist = math.hypot(enemy.x - self.x, enemy.y - self.y)
             if dist <= self.range:
-                if name == 2:
-                    enemy.hp -= 10
-                enemy.hp -= 10
+                enemy.hp -= self.damage
                 self.timer = self.cooldown
                 break
         
@@ -66,29 +53,28 @@ class Tower:
                     enemies_for_tower3.append(enemy)
                 
             for enemy in enemies_for_tower3:
-                enemy.hp -= 10
+                enemy.hp -= self.damage
             self.timer = self.cooldown
+
+    def rotate(self, enemies):
+        for enemy in enemies:
+            dist_x = enemy.x - self.x
+            dist_y = enemy.y - self.y
+            dist = math.hypot(dist_x, dist_y)
+            if dist <= self.range:
+                self.angle = math.degrees(math.atan2(-dist_y, dist_x)) - 90
+                self.image = pygame.transform.rotate(self.orig_image, self.angle)
+                break
 
 class Tower_level_up(Tower):
     def __init__(self, grid_x, grid_y, name):
         Tower.__init__(self, grid_x, grid_y, name)
-        if name == 1:
-            self.range = 100
-            self.cooldown = 60
-            self.image = pygame.image.load("images/tower2.png")
-
-        elif name == 2:
-            self.range = 100
-            self.cooldown = 100
-            self.image = pygame.image.load("images/tower2.png")
-
-        elif name == 3:
-            self.range = 150
-            self.cooldown = 110
-            self.image = pygame.image.load("images/tower2.png")
-
-        else:
-            self.range = 0
-            self.cooldown = 0
-            self.image = pygame.image.load("images/tower2.png")
-            self.hp = 100
+        self.range = TOWER_LEVEL_UP_DATA[name]['range']
+        self.cooldown = TOWER_LEVEL_UP_DATA[name]['cooldown']
+        self.damage = TOWER_LEVEL_UP_DATA[name]['damage']
+        self.angle = 0
+        self.orig_image = pygame.image.load(TOWER_LEVEL_UP_DATA[name]['image'])
+        self.image = pygame.transform.rotate(self.orig_image, self.angle)
+        if name == 4:
+            self.hp = TOWER_LEVEL_UP_DATA[name]['hp']
+            self.max_hp = TOWER_LEVEL_UP_DATA[name]['hp']

@@ -1,0 +1,42 @@
+@startuml Diagram klas
+class Enemy {
+    + path
+    + x
+    + y
+    + angle
+    + path_index
+    + speed
+    + hp
+    + orig_image
+    + image
+    + type
+    + max_hp
+    + __init__(self, path_coords, enemy_type)
+    + move(self)
+    + draw(self, win)
+    + rotate(self)
+    + image_top_left_corner(self)
+    + death(self, win, step=10)
+}
+
+class Tower {
+    + name
+    + x
+    + y
+    + timer
+    + range
+    + cooldown
+    + damage
+    + angle8
+    + orig_image
+    + image
+    + is_max_level
+    + __init__(self, grid_x, grid_y, name)
+    + draw(self, win)
+    + shoot(self, enemies)
+    + rotate(self, enemies)
+    + level_up(self)
+}
+
+Enemy <.. Tower
+@enduml

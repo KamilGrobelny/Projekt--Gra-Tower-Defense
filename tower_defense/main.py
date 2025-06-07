@@ -1,10 +1,12 @@
 import pygame
+import os
 
 from settings import WIDTH, HEIGHT
 from maps import MAPS
 from menu import choose_map, choose_mode
 from game import game_loop
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
     pygame.init()

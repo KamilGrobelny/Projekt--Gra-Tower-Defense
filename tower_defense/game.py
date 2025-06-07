@@ -7,14 +7,13 @@ from settings import (
 )
 from grid import draw_grid
 from enemy import Enemy
-from tower import Tower, Tower_level_up
+from tower import Tower
 
 def button_rect(a):
     return pygame.Rect(10 + 130 * a, HEIGHT - 40, 120, 30)
 
 def game_loop(win, path_tiles):
-    towers = [[], [], [], []]
-    towers_level_up = [[], [], [], []]
+    towers = []
     enemies = []
     dying_enemies = []
     selected_tile = None
@@ -60,19 +59,10 @@ def game_loop(win, path_tiles):
             if enemy.death(win):
                 dying_enemies.remove(enemy)
 
-        for number in range(4):
-            for tower in towers[number]:
-                tower.rotate(enemies)
-                tower.draw(win, number + 1)
-            for tower in towers_level_up[number]:
-                tower.rotate(enemies)
-                tower.draw(win, number + 1)
-        
-        for number in range(4):
-            for tower in towers[number]:
-                tower.shoot(enemies, number + 1)
-            for tower in towers_level_up[number]:
-                tower.shoot(enemies, number + 1)
+        for tower in towers:
+            tower.rotate(enemies)
+            tower.draw(win)
+            tower.shoot(enemies)
 
         for number in range(4):
             pygame.draw.rect(win, DARK_GRAY, tower_button[number])
@@ -104,19 +94,17 @@ def game_loop(win, path_tiles):
                     ):
                         if all(
                             selected_tile != (tower.x // 50, tower.y // 50)
-                            for list in towers + towers_level_up
-                                for tower in list
+                            for tower in towers
                         ):
                             if money >= TOWER_COST:
-                                towers[number].append(Tower(*selected_tile, number + 1))
+                                towers.append(Tower(*selected_tile, number + 1))
                                 money -= TOWER_COST
                                 selected_tile = None
 
-                        for tower in towers[number]:
-                            if selected_tile == (tower.x // 50, tower.y // 50):
+                        for tower in towers:
+                            if selected_tile == (tower.x // 50, tower.y // 50) and not tower.is_max_level:
                                 if money >= TOWER_COST:
-                                    towers[number].remove(tower)
-                                    towers_level_up[number].append(Tower_level_up(*selected_tile, number + 1))
+                                    tower.level_up()
                                     money -= TOWER_COST
                                     selected_tile = None
                                     break

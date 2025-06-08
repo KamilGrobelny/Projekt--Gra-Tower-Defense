@@ -57,12 +57,7 @@ def game_loop(win, path_tiles, mode):
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
-<<<<<<< HEAD
         if current_wave >= len(WAVES[map_name]) and mode == 'Kampania':
-=======
-
-        if current_wave >= len(WAVES[map]) and mode == 'Kampania':
->>>>>>> 5c3e5c07bda638d413b90faea6a6601f933d633a
             game_win_text = FONT.render('You won', True, WHITE)
             win.fill('GRAY')
             win.blit(game_win_text, (WIDTH // 2 - game_win_text.get_width() // 2, 150))
@@ -73,12 +68,8 @@ def game_loop(win, path_tiles, mode):
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
-<<<<<<< HEAD
         draw_map_background(win, map_name)
         draw_sidebar(win, textures)
-=======
-
->>>>>>> 5c3e5c07bda638d413b90faea6a6601f933d633a
         draw_grid(win, path_tiles, selected_tile)
 
         if mode == 'Nieskończoność':

@@ -1,6 +1,6 @@
 import pygame
 
-from settings import TILE_SIZE, GRAY, DARK_GRAY, BLUE, BROWN, ROWS, COLS
+from settings import TILE_SIZE, GRAY, DARK_GRAY, BLUE, BROWN, ROWS, COLS, WIDTH, HEIGHT
 
 
 def draw_grid(win, path_tiles, selected=None):
@@ -14,3 +14,8 @@ def draw_grid(win, path_tiles, selected=None):
             else:
                 pygame.draw.rect(win, GRAY, rect)
             pygame.draw.rect(win, DARK_GRAY, rect, 1)
+
+    side_bar_surf = pygame.Surface((WIDTH,TILE_SIZE))
+    side_bar_surf.fill('GRAY') # Change for some png (pygame.image.load('images/...png'))
+    win.blit(side_bar_surf,(0,0))
+    win.blit(side_bar_surf,(0,HEIGHT-TILE_SIZE))

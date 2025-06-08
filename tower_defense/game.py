@@ -63,6 +63,7 @@ def game_loop(win, path_tiles, mode):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
+                        return
 
         if current_wave >= len(WAVES[map]) and mode == 'Kampania':
             game_win_text = FONT.render('You won', True, WHITE)
@@ -77,6 +78,7 @@ def game_loop(win, path_tiles, mode):
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
+                        return
 
         draw_grid(win, path_tiles, selected_tile)
 

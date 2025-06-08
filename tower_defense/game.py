@@ -7,20 +7,21 @@ from settings import (
     STARTING_MONEY, TOWER_COST, ENEMY_REWARD,
     FPS, TILE_SIZE, BASE_HP
 )
-from grid import draw_grid
+from grid import draw_map_background, draw_sidebar, draw_grid, map_backgrounds, textures
 from enemy import Enemy
 from tower import Tower
 from waves import WAVES
 
-
 def button_rect(a):
     return pygame.Rect(10 + 130 * a, HEIGHT - 40, 120, 30)
-
 
 def game_loop(win, path_tiles, mode):
     for key, val in MAPS.items():
         if path_tiles == val:
-            map = key
+            map_name = key
+            break
+    else:
+        map_name = list(MAPS.keys())[0] 
 
     towers = []
     enemies = []
@@ -28,12 +29,7 @@ def game_loop(win, path_tiles, mode):
     selected_tile = None
     spawn_timer = 0
 
-    tower_button = [
-        button_rect(0),
-        button_rect(1),
-        button_rect(2),
-        button_rect(3)
-    ]
+    tower_button = [button_rect(i) for i in range(4)]
 
     clock = pygame.time.Clock()
     run = True
@@ -54,24 +50,22 @@ def game_loop(win, path_tiles, mode):
             run = False
             game_over_text = FONT.render('Game over', True, WHITE)
             win.fill('GRAY')
-            win.blit(
-                game_over_text,
-                (WIDTH // 2 - game_over_text.get_width() // 2, 150)
-            )
+            win.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, 150))
             pygame.display.update()
             while not run:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+<<<<<<< HEAD
+        if current_wave >= len(WAVES[map_name]) and mode == 'Kampania':
+=======
 
         if current_wave >= len(WAVES[map]) and mode == 'Kampania':
+>>>>>>> 5c3e5c07bda638d413b90faea6a6601f933d633a
             game_win_text = FONT.render('You won', True, WHITE)
             win.fill('GRAY')
-            win.blit(
-                game_win_text,
-                (WIDTH // 2 - game_win_text.get_width() // 2, 150)
-            )
+            win.blit(game_win_text, (WIDTH // 2 - game_win_text.get_width() // 2, 150))
             pygame.display.update()
             run = False
             while not run:
@@ -79,7 +73,12 @@ def game_loop(win, path_tiles, mode):
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+<<<<<<< HEAD
+        draw_map_background(win, map_name)
+        draw_sidebar(win, textures)
+=======
 
+>>>>>>> 5c3e5c07bda638d413b90faea6a6601f933d633a
         draw_grid(win, path_tiles, selected_tile)
 
         if mode == 'Nieskończoność':
@@ -94,20 +93,16 @@ def game_loop(win, path_tiles, mode):
                 spawn_timer += 1
 
                 if spawn_timer >= max(spawn, 10):
-                    enemies.append(
-                        Enemy(path_tiles, choice(['small', 'normal', 'boss']))
-                    )
+                    enemies.append(Enemy(path_tiles, choice(['small', 'normal', 'boss'])))
                     spawn_timer = 0
                     spawn -= 1
 
         if mode == 'Kampania':
-            wave_text = FONT.render(
-                f"Fala: {current_wave + 1}/{len(WAVES[map])}", True, DARK_GRAY
-            )
+            wave_text = FONT.render(f"Fala: {current_wave + 1}/{len(WAVES[map_name])}", True, DARK_GRAY)
             win.blit(wave_text, (10, 10))
 
-            if wave_in_progress and current_wave < len(WAVES[map]):
-                wave = WAVES[map][current_wave]
+            if wave_in_progress and current_wave < len(WAVES[map_name]):
+                wave = WAVES[map_name][current_wave]
                 if enemy_spawn_index < sum(count for _, count in wave):
                     wave_timer += 1
                     if wave_timer >= time_between_spawns:
@@ -145,7 +140,6 @@ def game_loop(win, path_tiles, mode):
                 money += ENEMY_REWARD.get(enemy.type)
                 enemies.remove(enemy)
                 dying_enemies.append(enemy)
-
             elif enemy.path_index >= len(enemy.path) - 1:
                 enemies.remove(enemy)
                 hp -= 1
@@ -163,10 +157,7 @@ def game_loop(win, path_tiles, mode):
 
         for number in range(4):
             pygame.draw.rect(win, DARK_GRAY, tower_button[number])
-            win.blit(
-                FONT.render(f"Wieża {number + 1}", True, WHITE),
-                (35 + 130 * number, HEIGHT - 35)
-            )
+            win.blit(FONT.render(f"Wieża {number + 1}", True, WHITE), (35 + 130 * number, HEIGHT - 35))
 
         pygame.display.update()
 
@@ -177,7 +168,7 @@ def game_loop(win, path_tiles, mode):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
 
-                if not wave_in_progress and current_wave < len(WAVES[map]):
+                if not wave_in_progress and current_wave < len(WAVES[map_name]):
                     if wave_button.collidepoint(mx, my):
                         wave_in_progress = True
 
@@ -195,23 +186,17 @@ def game_loop(win, path_tiles, mode):
                         and condition[number]
                     ):
                         if all(
-                            selected_tile != (
-                                tower.x // TILE_SIZE, tower.y // TILE_SIZE
-                            )
+                            selected_tile != (tower.x // TILE_SIZE, tower.y // TILE_SIZE)
                             for tower in towers
                         ):
                             if money >= TOWER_COST:
-                                towers.append(
-                                    Tower(*selected_tile, number + 1)
-                                )
+                                towers.append(Tower(*selected_tile, number + 1))
                                 money -= TOWER_COST
                                 selected_tile = None
 
                         for tower in towers:
                             if (
-                                selected_tile == (
-                                    tower.x // TILE_SIZE, tower.y // TILE_SIZE
-                                )
+                                selected_tile == (tower.x // TILE_SIZE, tower.y // TILE_SIZE)
                                 and not tower.is_max_level
                             ):
                                 if money >= TOWER_COST:
@@ -222,4 +207,6 @@ def game_loop(win, path_tiles, mode):
 
                     elif my < HEIGHT - TILE_SIZE:
                         grid_x, grid_y = mx // TILE_SIZE, my // TILE_SIZE
-                        selected_tile = (grid_x, grid_y)
+                        if TILE_SIZE <= my < HEIGHT - TILE_SIZE:
+                            selected_tile = (grid_x, grid_y)
+

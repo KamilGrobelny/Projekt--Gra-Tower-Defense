@@ -7,7 +7,7 @@ from settings import (
     STARTING_MONEY, TOWER_COST, ENEMY_REWARD,
     FPS, TILE_SIZE, BASE_HP
 )
-from grid import draw_map_background, draw_sidebar, draw_grid, map_backgrounds, textures
+from grid import draw_map_background, draw_sidebar, draw_grid, draw_selected_tile, map_backgrounds, textures
 from enemy import Enemy
 from tower import Tower
 from waves import WAVES
@@ -68,9 +68,10 @@ def game_loop(win, path_tiles, mode):
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+        draw_grid(win, path_tiles, selected_tile)
         draw_map_background(win, map_name)
         draw_sidebar(win, textures)
-        draw_grid(win, path_tiles, selected_tile)
+        draw_selected_tile(win, path_tiles, selected_tile)
 
         if mode == 'Nieskończoność':
             spawn = 120

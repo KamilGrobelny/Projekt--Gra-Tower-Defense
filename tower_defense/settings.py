@@ -1,7 +1,7 @@
 import pygame
 
 WIDTH, HEIGHT = 800, 600
-ROWS, COLS = 12, 16
+ROWS, COLS = 15, 20
 TILE_SIZE = WIDTH // COLS
 FPS = 60
 
@@ -16,6 +16,7 @@ BROWN = (150, 75, 0)
 pygame.init()
 FONT = pygame.font.SysFont(None, 28)
 
+BASE_HP = 10
 STARTING_MONEY = 500
 TOWER_COST = 100
 ENEMY_REWARD = {'small': 5, 'normal': 10, 'boss': 50}

@@ -19,7 +19,7 @@ def main():
 
     path = choose_map(win, MAPS)
     if path:
-        game_loop(win, path)
+        game_loop(win, path, mode)
 
 
 if __name__ == "__main__":

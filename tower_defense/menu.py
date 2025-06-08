@@ -4,7 +4,7 @@ from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, FONT
 
 
 def choose_mode(win):
-    options = ["Nieskończoność"]
+    options = ["Nieskończoność", "Kampania"]
 
     while True:
         win.fill(WHITE)

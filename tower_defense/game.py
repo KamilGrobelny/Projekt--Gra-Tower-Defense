@@ -30,12 +30,6 @@ def game_loop(win, path_tiles, mode):
     spawn_timer = 0
 
     tower_button = [button_rect(i) for i in range(4)]
-    condition = [
-        selected_tile not in path_tiles,
-        selected_tile not in path_tiles,
-        selected_tile not in path_tiles,
-        selected_tile in path_tiles
-    ]
 
     clock = pygame.time.Clock()
     run = True
@@ -171,6 +165,13 @@ def game_loop(win, path_tiles, mode):
                         wave_in_progress = True
 
                 for number in range(4):
+                    condition = [
+                        selected_tile not in path_tiles,
+                        selected_tile not in path_tiles,
+                        selected_tile not in path_tiles,
+                        selected_tile in path_tiles
+                    ]
+                    
                     if (
                         tower_button[number].collidepoint(mx, my)
                         and selected_tile

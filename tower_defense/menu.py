@@ -1,6 +1,6 @@
 import pygame
 
-from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, FONT
+from settings import WIDTH, WHITE, DARK_GRAY, FONT
 
 
 def choose_mode(win):

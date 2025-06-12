@@ -13,7 +13,7 @@ from tower import Tower
 from waves import WAVES
 
 def button_rect(a):
-    return pygame.Rect(10 + 130 * a, HEIGHT - 40, 120, 30)
+    return pygame.Rect(10 + 130 * a, HEIGHT - 35, 120, 30)
 
 def game_loop(win, path_tiles, mode):
     for key, val in MAPS.items():
@@ -118,10 +118,17 @@ def game_loop(win, path_tiles, mode):
             win.blit(wave_text, (WIDTH // 2 - 45, 15))
 
         hp_text = FONT.render(f"Zycie: {hp}", True, DARK_GRAY)
-        win.blit(hp_text, (WIDTH - 180, 10))
+        win.blit(hp_text, (WIDTH - 100, 10))
 
         money_text = FONT.render(f"Pieniądze: {money}", True, DARK_GRAY)
-        win.blit(money_text, (WIDTH - 180, HEIGHT - 35))
+        win.blit(money_text, (WIDTH - 290, 10))
+
+        pygame.draw.rect(win, DARK_GRAY, button_rect(5))
+        win.blit(FONT.render(f"Ulepszenie", True, WHITE), (667, HEIGHT - 30))
+
+        for number in range(4):
+            pygame.draw.rect(win, DARK_GRAY, tower_button[number])
+            win.blit(FONT.render(f"Wieża {number + 1}", True, WHITE), (35 + 130 * number, HEIGHT - 30))
 
         for enemy in enemies:
             enemy.move()
@@ -145,11 +152,8 @@ def game_loop(win, path_tiles, mode):
         for tower in towers:
             tower.rotate(enemies)
             tower.draw(win)
-            tower.shoot(enemies)
-
-        for number in range(4):
-            pygame.draw.rect(win, DARK_GRAY, tower_button[number])
-            win.blit(FONT.render(f"Wieża {number + 1}", True, WHITE), (35 + 130 * number, HEIGHT - 35))
+            if tower.shoot(enemies):
+                towers.remove(tower)
 
         pygame.display.update()
 
@@ -185,20 +189,22 @@ def game_loop(win, path_tiles, mode):
                                 towers.append(Tower(*selected_tile, number + 1))
                                 money -= TOWER_COST
                                 selected_tile = None
+                if (
+                    button_rect(5).collidepoint(mx, my)
+                    and selected_tile
+                ):
+                    for tower in towers:
+                        if (
+                            selected_tile == (tower.x // TILE_SIZE, tower.y // TILE_SIZE)
+                            and not tower.is_max_level
+                            and money >= TOWER_COST
+                        ):
+                            tower.level_up()
+                            money -= TOWER_COST
+                            selected_tile = None
+                            break
 
-                        for tower in towers:
-                            if (
-                                selected_tile == (tower.x // TILE_SIZE, tower.y // TILE_SIZE)
-                                and not tower.is_max_level
-                            ):
-                                if money >= TOWER_COST:
-                                    tower.level_up()
-                                    money -= TOWER_COST
-                                    selected_tile = None
-                                    break
-
-                    elif my < HEIGHT - TILE_SIZE:
-                        grid_x, grid_y = mx // TILE_SIZE, my // TILE_SIZE
-                        if TILE_SIZE <= my < HEIGHT - TILE_SIZE:
-                            selected_tile = (grid_x, grid_y)
-
+                elif my < HEIGHT - TILE_SIZE:
+                    grid_x, grid_y = mx // TILE_SIZE, my // TILE_SIZE
+                    if TILE_SIZE <= my < HEIGHT - TILE_SIZE:
+                        selected_tile = (grid_x, grid_y)

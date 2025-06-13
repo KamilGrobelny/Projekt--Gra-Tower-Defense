@@ -30,10 +30,10 @@ ENEMY_DATA = {'small':{'hp':50, 'speed':1.5, 'image':'images/enemy_small.png'},
 
 TOWER_DATA = {1: {'range': 100, 'cooldown': 60, 'image': 'images/tower1.png', 'damage': 10},
               2: {'range': 100, 'cooldown': 100, 'image': 'images/tower1a.png', 'damage': 20},
-              3: {'range': 150, 'cooldown': 150, 'image': 'images/tower1b.png', 'damage': 10},
+              3: {'range': 110, 'cooldown': 200, 'image': 'images/tower1b.png', 'damage': 10},
               4: {'range': 90, 'cooldown': 0, 'image': 'images/tower1c.png', 'damage': 100}}
 
 TOWER_LEVEL_UP_DATA = {1: {'range': 100, 'cooldown': 50, 'image': 'images/tower2.png', 'damage': 10},
                        2: {'range': 100, 'cooldown': 100, 'image': 'images/tower2a.png', 'damage': 25},
-                       3: {'range': 150, 'cooldown': 130, 'image': 'images/tower2b.png', 'damage': 10},
+                       3: {'range': 110, 'cooldown': 150, 'image': 'images/tower2b.png', 'damage': 10},
                        4: {'range': 120, 'cooldown': 0, 'image': 'images/tower2c.png', 'damage': 100}}

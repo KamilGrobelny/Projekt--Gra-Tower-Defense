@@ -4,7 +4,7 @@ from random import choice
 from maps import MAPS
 from settings import (
     WIDTH, HEIGHT, WHITE, DARK_GRAY, FONT,
-    STARTING_MONEY, TOWER_COST, ENEMY_REWARD,
+    STARTING_MONEY, TOWER_COST, TOWER_LEVEL_UP_COST, ENEMY_REWARD,
     FPS, TILE_SIZE, BASE_HP
 )
 from grid import draw_map_background, draw_sidebar, draw_grid, draw_selected_tile, map_backgrounds, textures
@@ -197,10 +197,10 @@ def game_loop(win, path_tiles, mode):
                         if (
                             selected_tile == (tower.x // TILE_SIZE, tower.y // TILE_SIZE)
                             and not tower.is_max_level
-                            and money >= TOWER_COST
+                            and money >= TOWER_LEVEL_UP_COST
                         ):
                             tower.level_up()
-                            money -= TOWER_COST
+                            money -= TOWER_LEVEL_UP_COST
                             selected_tile = None
                             break
 

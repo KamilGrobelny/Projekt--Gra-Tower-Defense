@@ -19,6 +19,7 @@ FONT = pygame.font.SysFont(None, 28)
 BASE_HP = 10
 STARTING_MONEY = 500
 TOWER_COST = 100
+TOWER_LEVEL_UP_COST = 50
 ENEMY_REWARD = {'small': 5, 'normal': 10, 'boss': 50}
 BAR_WIDTH = 40
 BAR_HEIGHT = 5

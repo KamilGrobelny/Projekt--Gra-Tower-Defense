@@ -18,6 +18,7 @@ class Tower:
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
         self.is_max_level = False
 
+    
     def draw(self, win):
         image = self.image.get_rect()
         image_x = self.x - image.width // 2
@@ -25,6 +26,7 @@ class Tower:
         win.blit(self.image, (image_x, image_y))
         pygame.draw.circle(win, DARK_GRAY, (self.x, self.y), self.range, 1)
 
+    
     def shoot(self, enemies):
         if self.timer > 0:
             self.timer -= 1
@@ -67,6 +69,7 @@ class Tower:
 
         return tower4_shots
 
+    
     def rotate(self, enemies):
         if self.name == 4:
             return
@@ -80,6 +83,7 @@ class Tower:
                 self.image = pygame.transform.rotate(self.orig_image, self.angle)
                 break
 
+    
     def level_up(self):
         self.range = TOWER_LEVEL_UP_DATA[self.name]['range']
         self.cooldown = TOWER_LEVEL_UP_DATA[self.name]['cooldown']

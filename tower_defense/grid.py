@@ -1,6 +1,6 @@
 import pygame
 import os
-from settings import WIDTH, HEIGHT, TILE_SIZE, WHITE, RED, BLUE
+from settings import WIDTH, HEIGHT, TILE_SIZE, WHITE, RED
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -68,14 +68,3 @@ def draw_grid(win, path_tiles, selected_tile):
             rect = pygame.Rect(sx * TILE_SIZE, sy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
             pygame.draw.rect(win, RED, rect, 3)  
 
-def draw_selected_tile(win, path_tiles, selected_tile): 
-    rows = (HEIGHT - 2 * TILE_SIZE) // TILE_SIZE
-    if selected_tile:
-        sx, sy = selected_tile
-        if 1 <= sy < rows + 1:
-            if (sx, sy) not in path_tiles:
-                rect = pygame.Rect(sx * TILE_SIZE, sy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                pygame.draw.rect(win, BLUE, rect, 3)
-            else:
-                rect = pygame.Rect(sx * TILE_SIZE, sy * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                pygame.draw.rect(win, RED, rect, 3)

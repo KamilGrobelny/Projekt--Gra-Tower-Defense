@@ -7,7 +7,7 @@ from settings import (
     STARTING_MONEY, TOWER_COST, TOWER_LEVEL_UP_COST, ENEMY_REWARD,
     FPS, TILE_SIZE, BASE_HP
 )
-from grid import draw_map_background, draw_sidebar, draw_grid, draw_selected_tile, map_backgrounds, textures
+from grid import draw_map_background, draw_sidebar, draw_grid, map_backgrounds, textures
 from enemy import Enemy
 from tower import Tower
 from waves import WAVES
@@ -21,7 +21,7 @@ def game_loop(win, path_tiles, mode):
             map_name = key
             break
     else:
-        map_name = list(MAPS.keys())[0] 
+        map_name = list(MAPS.keys())[0]
 
     towers = []
     enemies = []
@@ -41,6 +41,17 @@ def game_loop(win, path_tiles, mode):
     enemy_spawn_index = 0
     time_between_spawns = 30
     hp = BASE_HP
+    enemy_hp_multiplier = 1.0
+    hp_increase_timer = 0
+
+    survival_time_frames = 0                   
+    survival_timer_active = False             
+
+    try:
+        with open("best_time.txt", "r") as f:
+            best_time_seconds = int(f.read())
+    except:
+        best_time_seconds = 0
 
     while run:
         clock.tick(FPS)
@@ -48,15 +59,31 @@ def game_loop(win, path_tiles, mode):
 
         if hp < 1:
             run = False
-            game_over_text = FONT.render('Game over', True, WHITE)
             win.fill('GRAY')
+            game_over_text = FONT.render('Game over', True, WHITE)
             win.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, 150))
+
+            if mode == 'Nieskończoność':
+                total_seconds = survival_time_frames // FPS
+                minutes = total_seconds // 60
+                seconds = total_seconds % 60
+                record_minutes = best_time_seconds // 60
+                record_seconds = best_time_seconds % 60
+
+                time_text = FONT.render(
+                    f"Czas: {minutes:02}:{seconds:02}  |  Rekord: {record_minutes:02}:{record_seconds:02}",
+                    True, WHITE
+                )
+                win.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, 200))
+
             pygame.display.update()
             while not run:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+
+
         if current_wave >= len(WAVES[map_name]) and mode == 'Kampania':
             game_win_text = FONT.render('You won', True, WHITE)
             win.fill('GRAY')
@@ -68,13 +95,34 @@ def game_loop(win, path_tiles, mode):
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
-        draw_grid(win, path_tiles, selected_tile)
+
         draw_map_background(win, map_name)
         draw_sidebar(win, textures)
-        draw_selected_tile(win, path_tiles, selected_tile)
+        draw_grid(win, path_tiles, selected_tile)
 
         if mode == 'Nieskończoność':
             spawn = 120
+
+            if survival_timer_active:
+                survival_time_frames += 1
+                total_seconds = survival_time_frames // FPS
+                minutes = total_seconds // 60
+                seconds = total_seconds % 60
+
+                if total_seconds > best_time_seconds:
+                    best_time_seconds = total_seconds
+                    with open("best_time.txt", "w") as f:
+                        f.write(str(best_time_seconds))
+            else:
+                total_seconds = survival_time_frames // FPS
+                minutes = total_seconds // 60
+                seconds = total_seconds % 60
+
+            time_text = FONT.render(
+                f"Czas: {minutes:02}:{seconds:02}  |  Rekord: {best_time_seconds // 60:02}:{best_time_seconds % 60:02}",
+                True, DARK_GRAY
+            )
+            win.blit(time_text, (10, 5))
 
             if not wave_in_progress:
                 wave_button = pygame.Rect(WIDTH // 2 - 60, 10, 120, 30)
@@ -83,9 +131,13 @@ def game_loop(win, path_tiles, mode):
                 win.blit(start_text, (WIDTH // 2 - 30, 15))
             else:
                 spawn_timer += 1
+                hp_increase_timer += 1
+                if hp_increase_timer >= FPS * 10:
+                    enemy_hp_multiplier *= 1.1
+                    hp_increase_timer = 0
 
                 if spawn_timer >= max(spawn, 10):
-                    enemies.append(Enemy(path_tiles, choice(['small', 'normal', 'boss'])))
+                    enemies.append(Enemy(path_tiles, choice(['small', 'normal', 'boss']), hp_multiplier=enemy_hp_multiplier))
                     spawn_timer = 0
                     spawn -= 1
 
@@ -164,9 +216,11 @@ def game_loop(win, path_tiles, mode):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
 
-                if not wave_in_progress and current_wave < len(WAVES[map_name]):
+                if not wave_in_progress:
                     if wave_button.collidepoint(mx, my):
                         wave_in_progress = True
+                        if mode == 'Nieskończoność':
+                            survival_timer_active = True  
 
                 for number in range(4):
                     condition = [
@@ -175,7 +229,7 @@ def game_loop(win, path_tiles, mode):
                         selected_tile not in path_tiles,
                         selected_tile in path_tiles
                     ]
-                    
+
                     if (
                         tower_button[number].collidepoint(mx, my)
                         and selected_tile
@@ -189,6 +243,7 @@ def game_loop(win, path_tiles, mode):
                                 towers.append(Tower(*selected_tile, number + 1))
                                 money -= TOWER_COST
                                 selected_tile = None
+
                 if (
                     button_rect(5).collidepoint(mx, my)
                     and selected_tile

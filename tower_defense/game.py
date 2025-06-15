@@ -137,7 +137,7 @@ def game_loop(win, path_tiles, mode):
                     hp_increase_timer = 0
 
                 if spawn_timer >= max(spawn, 10):
-                    enemies.append(Enemy(path_tiles, choice(['small', 'normal', 'boss']), hp_multiplier=enemy_hp_multiplier))
+                    enemies.append(Enemy(path_tiles, choice(['small', 'normal', 'boss', 'fire', 'female', 'paker', 'skeleton', 'soldier']), hp_multiplier=enemy_hp_multiplier))
                     spawn_timer = 0
                     spawn -= 1
 

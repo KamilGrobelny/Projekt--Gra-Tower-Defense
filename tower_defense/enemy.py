@@ -21,7 +21,7 @@ class Enemy:
         self.hp = int(base_hp * hp_multiplier)
         self.max_hp = int(base_hp * hp_multiplier)
 
-        self.orig_image = pygame.image.load(ENEMY_DATA[enemy_type]['image'])
+        self.orig_image = pygame.image.load(ENEMY_DATA[enemy_type]['image']).convert_alpha()
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
     
         self.type = enemy_type

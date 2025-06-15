@@ -6,9 +6,9 @@ from maps import MAPS
 from menu import choose_map, choose_mode
 from game import game_loop
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     pygame.init()
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Tower Defense")

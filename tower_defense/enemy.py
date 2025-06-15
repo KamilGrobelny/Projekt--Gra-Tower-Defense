@@ -1,20 +1,22 @@
 import pygame
 import math
 import random
-from settings import TILE_SIZE, RED, GREEN, BAR_WIDTH, BAR_HEIGHT, ENEMY_DATA
+from settings import TILE_SIZE, RED, GREEN, BAR_WIDTH, BAR_HEIGHT, ENEMY_DATA, WIDTH
 
 
 class Enemy:
     def __init__(self, path_coords, enemy_type, hp_multiplier=1.0):
         offset = random.randint(-20, 20)
-        self.path = [
+        path = [
             (x * TILE_SIZE + TILE_SIZE // 2 + offset, y * TILE_SIZE + TILE_SIZE // 2 + offset)
             for x, y in path_coords
         ]
+        self.path = [(0, path[0][1])] + path + [(WIDTH, path[-1][-1])]
         self.x, self.y = self.path[0]
         self.angle = -90
         self.path_index = 0
         self.speed = ENEMY_DATA[enemy_type]['speed']
+        self.damage = ENEMY_DATA[enemy_type]['damage']
         
         # Skalowanie HP
         base_hp = ENEMY_DATA[enemy_type]['hp']

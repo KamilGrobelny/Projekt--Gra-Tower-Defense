@@ -193,9 +193,7 @@ def game_loop(win, path_tiles, mode):
                 dying_enemies.append(enemy)
             elif enemy.path_index >= len(enemy.path) - 1:
                 enemies.remove(enemy)
-                hp -= 1
-                if enemy.type == 'Boss':
-                    hp -= 4
+                hp = max(hp - enemy.damage, 0)
 
         for enemy in dying_enemies:
             if enemy.death(win):

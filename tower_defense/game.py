@@ -3,7 +3,7 @@ from random import choice
 
 from maps import MAPS
 from settings import (
-    WIDTH, HEIGHT, WHITE, DARK_GRAY, FONT,
+    WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT,
     STARTING_MONEY, TOWER_COST, TOWER_LEVEL_UP_COST, ENEMY_REWARD,
     FPS, TILE_SIZE, BASE_HP
 )
@@ -16,6 +16,11 @@ def button_rect(a):
     return pygame.Rect(10 + 130 * a, HEIGHT - 35, 120, 30)
 
 def game_loop(win, path_tiles, mode):
+    game_over_img = pygame.image.load("images/game_over.png").convert()
+    game_won_img = pygame.image.load("images/game_won.png").convert()
+    game_over_img = pygame.transform.scale(game_over_img, (WIDTH, HEIGHT))
+    game_won_img = pygame.transform.scale(game_won_img, (WIDTH, HEIGHT))
+
     for key, val in MAPS.items():
         if path_tiles == val:
             map_name = key
@@ -59,7 +64,7 @@ def game_loop(win, path_tiles, mode):
 
         if hp < 1:
             run = False
-            win.fill('GRAY')
+            win.blit(game_over_img, (0, 0))
             game_over_text = FONT.render('Game over', True, WHITE)
             win.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, 150))
 
@@ -76,18 +81,34 @@ def game_loop(win, path_tiles, mode):
                 )
                 win.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, 200))
 
+            back_button = pygame.Rect(WIDTH // 2 - 100, 280, 200, 40)
+            pygame.draw.rect(win, DARK_GRAY, back_button)
+            win.blit(FONT.render("Powrót do menu", True, WHITE), (back_button.x + 20, back_button.y + 10))
+
             pygame.display.update()
+
             while not run:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        mx, my = pygame.mouse.get_pos()
+                        if back_button.collidepoint(mx, my):
+                            return
+
+
 
 
         if current_wave >= len(WAVES[map_name]) and mode == 'Kampania':
-            game_win_text = FONT.render('You won', True, WHITE)
-            win.fill('GRAY')
+            win.blit(game_won_img, (0, 0))
+            game_win_text = FONT.render('You won!', True, WHITE)
             win.blit(game_win_text, (WIDTH // 2 - game_win_text.get_width() // 2, 150))
+
+            back_button = pygame.Rect(WIDTH // 2 - 100, 220, 200, 40)
+            pygame.draw.rect(win, DARK_GRAY, back_button)
+            win.blit(FONT.render("Powrót do menu", True, WHITE), (back_button.x + 20, back_button.y + 10))
+
             pygame.display.update()
             run = False
             while not run:
@@ -95,6 +116,11 @@ def game_loop(win, path_tiles, mode):
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        mx, my = pygame.mouse.get_pos()
+                        if back_button.collidepoint(mx, my):
+                            return
+
 
         draw_map_background(win, map_name)
         draw_sidebar(win, textures)
@@ -120,7 +146,7 @@ def game_loop(win, path_tiles, mode):
 
             time_text = FONT.render(
                 f"Czas: {minutes:02}:{seconds:02}  |  Rekord: {best_time_seconds // 60:02}:{best_time_seconds % 60:02}",
-                True, DARK_GRAY
+                True, BLACK
             )
             win.blit(time_text, (10, 5))
 
@@ -142,7 +168,7 @@ def game_loop(win, path_tiles, mode):
                     spawn -= 1
 
         if mode == 'Kampania':
-            wave_text = FONT.render(f"Fala: {current_wave + 1}/{len(WAVES[map_name])}", True, DARK_GRAY)
+            wave_text = FONT.render(f"Fala: {current_wave + 1}/{len(WAVES[map_name])}", True, BLACK)
             win.blit(wave_text, (10, 10))
 
             if wave_in_progress and current_wave < len(WAVES[map_name]):
@@ -169,10 +195,10 @@ def game_loop(win, path_tiles, mode):
             wave_text = FONT.render("Start wave", True, WHITE)
             win.blit(wave_text, (WIDTH // 2 - 45, 15))
 
-        hp_text = FONT.render(f"Zycie: {hp}", True, DARK_GRAY)
+        hp_text = FONT.render(f"Zycie: {hp}", True, BLACK)
         win.blit(hp_text, (WIDTH - 100, 10))
 
-        money_text = FONT.render(f"Pieniądze: {money}", True, DARK_GRAY)
+        money_text = FONT.render(f"Pieniądze: {money}", True, BLACK)
         win.blit(money_text, (WIDTH - 290, 10))
 
         pygame.draw.rect(win, DARK_GRAY, button_rect(5))

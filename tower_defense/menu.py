@@ -1,21 +1,22 @@
 import pygame
+import os
 
-from settings import WIDTH, WHITE, DARK_GRAY, FONT
+from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT
 
 
 def choose_mode(win):
     options = ["Nieskończoność", "Kampania"]
+    background = pygame.image.load(os.path.join("images", "menu.png")).convert()
 
     while True:
-        win.fill(WHITE)
-        win.blit(
-            FONT.render("Wybierz tryb gry:", True, DARK_GRAY),
-            (WIDTH // 2 - 80, 40),
-        )
+        win.blit(background, (0, 0))
+
+        title_text = FONT.render("Wybierz tryb gry:", True, BLACK)
+        win.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 2 + 20))
 
         buttons = []
         for i, name in enumerate(options):
-            rect = pygame.Rect(WIDTH // 2 - 100, 100 + i * 60, 200, 40)
+            rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
             buttons.append((rect, name))
             pygame.draw.rect(win, DARK_GRAY, rect)
             win.blit(
@@ -36,16 +37,17 @@ def choose_mode(win):
 
 
 def choose_map(win, maps):
+    background = pygame.image.load(os.path.join("images", "menu.png")).convert()
+
     while True:
-        win.fill(WHITE)
-        win.blit(
-            FONT.render("Wybierz mapę:", True, DARK_GRAY),
-            (WIDTH // 2 - 60, 40),
-        )
+        win.blit(background, (0, 0))
+
+        title_text = FONT.render("Wybierz mapę:", True, BLACK)
+        win.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 2 + 20))
 
         buttons = []
         for i, name in enumerate(maps.keys()):
-            rect = pygame.Rect(WIDTH // 2 - 100, 100 + i * 60, 200, 40)
+            rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
             buttons.append((rect, name))
             pygame.draw.rect(win, DARK_GRAY, rect)
             win.blit(

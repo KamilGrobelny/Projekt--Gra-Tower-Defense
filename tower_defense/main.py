@@ -13,13 +13,18 @@ def main():
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Tower Defense")
 
-    mode = choose_mode(win)
-    if not mode:
-        return
+    while True:
+        mode = choose_mode(win)
+        if not mode:
+            break
 
-    path = choose_map(win, MAPS)
-    if path:
+        path = choose_map(win, MAPS)
+        if not path:
+            break
+
         game_loop(win, path, mode)
+
+    pygame.quit()
 
 
 if __name__ == "__main__":

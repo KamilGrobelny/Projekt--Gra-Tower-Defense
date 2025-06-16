@@ -7,11 +7,12 @@ FPS = 60
 
 WHITE = (255, 255, 255)
 GRAY = (180, 180, 180)
-DARK_GRAY = (100, 100, 100)
+DARK_GRAY = (80, 80, 80)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (50, 50, 255)
 BROWN = (150, 75, 0)
+BLACK = (0, 0, 0)
 
 pygame.init()
 FONT = pygame.font.SysFont(None, 28)

@@ -1,10 +1,11 @@
 import pygame
 import os
 
+from typing import Union
 from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT
 
 
-def choose_mode(win):
+def choose_mode(win: pygame.Surface) -> Union[str, None]:
     options = ["Nieskończoność", "Kampania"]
     background = pygame.image.load(os.path.join("images", "menu.png")).convert()
 
@@ -36,7 +37,7 @@ def choose_mode(win):
                         return name
 
 
-def choose_map(win, maps):
+def choose_map(win: pygame.Surface, maps: dict[str, list[tuple[int, int]]]) -> Union[list[tuple[int, int]], None]:
     background = pygame.image.load(os.path.join("images", "menu.png")).convert()
 
     while True:

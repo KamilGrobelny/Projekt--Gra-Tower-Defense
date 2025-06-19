@@ -6,7 +6,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # ładowanie teł map
-def load_map_backgrounds():
+def load_map_backgrounds() -> dict[str, pygame.Surface]:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     map_dir = os.path.join(script_dir, 'images', 'maps')
 
@@ -19,7 +19,7 @@ def load_map_backgrounds():
             backgrounds[name] = img
     return backgrounds
 
-def load_ui_textures():
+def load_ui_textures() -> dict[str, pygame.Surface]:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     ui_dir = os.path.join(script_dir, 'images', 'ui')
 
@@ -36,21 +36,22 @@ map_backgrounds = load_map_backgrounds()
 textures = load_ui_textures()
 
 # rysowanie mapy
-def draw_map_background(win, map_name):
+def draw_map_background(win: pygame.Surface, map_name: str) -> None:
     background = map_backgrounds.get(map_name)
     if background:
         win.blit(background, (0, 0))
     else:
         print(f"Nie znaleziono tła dla mapy: {map_name}")
-        win.fill((50, 50, 50))  
+        win.fill((50, 50, 50))
+
 # pasek z góry i z dołu
-def draw_sidebar(win, textures):
+def draw_sidebar(win: pygame.Surface, textures: dict[str, pygame.Surface]) -> None:
     side_bar_surf = textures['sidebar']
     scaled_sidebar = pygame.transform.scale(side_bar_surf, (WIDTH, TILE_SIZE))
     win.blit(scaled_sidebar, (0, 0))
     win.blit(scaled_sidebar, (0, HEIGHT - TILE_SIZE))
 
-def draw_grid(win, path_tiles, selected_tile):
+def draw_grid(win: pygame.Surface, selected_tile: tuple[int, int]) -> None:
     cols = WIDTH // TILE_SIZE
     rows = (HEIGHT - 2 * TILE_SIZE) // TILE_SIZE
 

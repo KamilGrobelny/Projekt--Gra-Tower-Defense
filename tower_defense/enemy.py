@@ -1,4 +1,3 @@
-
 import pygame
 import math
 import random
@@ -6,7 +5,7 @@ from settings import TILE_SIZE, RED, GREEN, BAR_WIDTH, BAR_HEIGHT, ENEMY_DATA, W
 
 
 class Enemy:
-    def __init__(self, path_coords, enemy_type, hp_multiplier=1.0):
+    def __init__(self, path_coords: list[tuple[int, int]], enemy_type: str, hp_multiplier: float = 1.0) -> None:
         offset = random.randint(-20, 20)
         path = [
             (x * TILE_SIZE + TILE_SIZE // 2 + offset, y * TILE_SIZE + TILE_SIZE // 2 + offset)
@@ -29,7 +28,7 @@ class Enemy:
     
         self.type = enemy_type
     
-    def move(self):
+    def move(self) -> None:
         if self.path_index + 1 >= len(self.path):
             return 
 
@@ -44,7 +43,7 @@ class Enemy:
             self.x += dx / dist * self.speed
             self.y += dy / dist * self.speed
 
-    def draw(self, win):
+    def draw(self, win: pygame.Surface) -> None:
         win.blit(self.image, self.image_top_left_corner())
 
         bar_x = self.x - BAR_WIDTH // 2
@@ -54,7 +53,7 @@ class Enemy:
         pygame.draw.rect(win, RED, (bar_x, bar_y, BAR_WIDTH, BAR_HEIGHT))
         pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))
 
-    def rotate(self):
+    def rotate(self) -> None:
         if self.path_index + 1 >= len(self.path):
             return
         
@@ -64,13 +63,13 @@ class Enemy:
         self.angle = math.degrees(math.atan2(-move_vect[1], move_vect[0])) - 90
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
 
-    def image_top_left_corner(self):
+    def image_top_left_corner(self) -> tuple[int, int]:
         image = self.image.get_rect()
         image_x = self.x - image.width // 2
         image_y = self.y - image.height // 2
         return (image_x, image_y)
     
-    def death(self, win, step=10):
+    def death(self, win: pygame.Surface, step: int = 10) -> bool:
         alpha = self.image.get_alpha()
         alpha = max(0, alpha - step)
         self.image.set_alpha(alpha)

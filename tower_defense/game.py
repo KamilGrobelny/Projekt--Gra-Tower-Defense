@@ -6,16 +6,16 @@ from settings import (
     WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT,
     STARTING_MONEY, TOWER_COST, TOWER_LEVEL_UP_COST, ENEMY_REWARD,
     FPS, TILE_SIZE, BASE_HP
-)
+    )
 from grid import draw_map_background, draw_sidebar, draw_grid, map_backgrounds, textures
 from enemy import Enemy
 from tower import Tower
 from waves import WAVES
 
-def button_rect(a):
+def button_rect(a: int) -> pygame.Rect:
     return pygame.Rect(10 + 130 * a, HEIGHT - 35, 120, 30)
 
-def game_loop(win, path_tiles, mode):
+def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str) -> bool:
     game_over_img = pygame.image.load("images/game_over.png").convert()
     game_won_img = pygame.image.load("images/game_won.png").convert()
     game_over_img = pygame.transform.scale(game_over_img, (WIDTH, HEIGHT))
@@ -56,7 +56,7 @@ def game_loop(win, path_tiles, mode):
     try:
         with open("best_time.txt", "r") as f:
             best_time_seconds = int(f.read())
-    except:
+    except FileNotFoundError:
         best_time_seconds = 0
 
     while run:
@@ -121,7 +121,7 @@ def game_loop(win, path_tiles, mode):
 
         draw_map_background(win, map_name)
         draw_sidebar(win, textures)
-        draw_grid(win, path_tiles, selected_tile)
+        draw_grid(win, selected_tile)
 
         if mode == 'Nieskończoność':
             spawn = 120

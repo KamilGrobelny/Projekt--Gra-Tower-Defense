@@ -1,11 +1,13 @@
 import math
 import pygame
 
+from typing import Union
+from enemy import Enemy
 from settings import TILE_SIZE, DARK_GRAY, TOWER_DATA, TOWER_LEVEL_UP_DATA
 
 
 class Tower:
-    def __init__(self, grid_x, grid_y, name):
+    def __init__(self, grid_x: int, grid_y: int, name: str) -> None:
         self.name = name
         self.x = grid_x * TILE_SIZE + TILE_SIZE // 2
         self.y = grid_y * TILE_SIZE + TILE_SIZE // 2
@@ -19,7 +21,7 @@ class Tower:
         self.is_max_level = False
 
     
-    def draw(self, win):
+    def draw(self, win: pygame.Surface) -> None:
         image = self.image.get_rect()
         image_x = self.x - image.width // 2
         image_y = self.y - image.height // 2
@@ -27,7 +29,7 @@ class Tower:
         pygame.draw.circle(win, DARK_GRAY, (self.x, self.y), self.range, 1)
 
     
-    def shoot(self, enemies):
+    def shoot(self, enemies: Enemy) -> Union[bool, None]:
         if self.timer > 0:
             self.timer -= 1
             return
@@ -70,7 +72,7 @@ class Tower:
         return tower4_shots
 
     
-    def rotate(self, enemies):
+    def rotate(self, enemies: list[Enemy]) -> None:
         if self.name == 4:
             return
 
@@ -84,7 +86,7 @@ class Tower:
                 break
 
     
-    def level_up(self):
+    def level_up(self) -> None:
         self.range = TOWER_LEVEL_UP_DATA[self.name]['range']
         self.cooldown = TOWER_LEVEL_UP_DATA[self.name]['cooldown']
         self.damage = TOWER_LEVEL_UP_DATA[self.name]['damage']

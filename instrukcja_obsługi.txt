@@ -24,6 +24,8 @@ licznik czasu, jaki wytrzymaliśmy odpierając przeciwników i możliwość por�
 
 Gracz przegrywa jak straci 10 punktów życia, które są odbierane gdy przeciwnicy docierają na koniec planszy.
 
+W celu przyspieszenia gry można przytrzymać klawisz spacji na klawiaturze.
+
 By powstrzymać przeciwników gracz ma do dyspozycji 4 wieże. Pierwsza jest szybkostrzelna i nie zadaje zbyt wielu obrażeń, druga zadaje więcej obrażeń ale potrzebuje czasu by wystrzelic poraz kolejny,
 trzecia to "moździerz" który potrzebuje długiego czasu ładowania ale atakuje przeciwników w niewielkim obszarze, a nie tylko pojedyńczych wrogów, ma on też największy zasięg. Czwarta wieża docelowo ma 
 zostać barykadą ale na czas prototypu nie spełnia wszystkich swoich funkcji i sugeruję jej nie używać. Stawiana ona może być tylko na środku ścieżki. Pozostałe wieże stawiamy poza ścieżką.

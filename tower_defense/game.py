@@ -33,6 +33,7 @@ def game_loop(win, path_tiles, mode):
     dying_enemies = []
     selected_tile = None
     spawn_timer = 0
+    current_fps = FPS
 
     tower_button = [button_rect(i) for i in range(4)]
 
@@ -59,7 +60,7 @@ def game_loop(win, path_tiles, mode):
         best_time_seconds = 0
 
     while run:
-        clock.tick(FPS)
+        clock.tick(current_fps)
         win.fill(WHITE)
 
         if hp < 1:
@@ -90,14 +91,11 @@ def game_loop(win, path_tiles, mode):
             while not run:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        pygame.quit()
-                        return
+                        return False
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         mx, my = pygame.mouse.get_pos()
                         if back_button.collidepoint(mx, my):
-                            return
-
-
+                            return True
 
 
         if current_wave >= len(WAVES[map_name]) and mode == 'Kampania':
@@ -114,12 +112,11 @@ def game_loop(win, path_tiles, mode):
             while not run:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        pygame.quit()
-                        return
+                        return False
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         mx, my = pygame.mouse.get_pos()
                         if back_button.collidepoint(mx, my):
-                            return
+                            return True
 
 
         draw_map_background(win, map_name)
@@ -151,10 +148,10 @@ def game_loop(win, path_tiles, mode):
             win.blit(time_text, (10, 5))
 
             if not wave_in_progress:
-                wave_button = pygame.Rect(WIDTH // 2 - 60, 10, 120, 30)
+                wave_button = pygame.Rect(WIDTH // 2 - 60, 5, 120, 30)
                 pygame.draw.rect(win, DARK_GRAY, wave_button)
                 start_text = FONT.render("Start ", True, WHITE)
-                win.blit(start_text, (WIDTH // 2 - 30, 15))
+                win.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, 10))
             else:
                 spawn_timer += 1
                 hp_increase_timer += 1
@@ -190,10 +187,10 @@ def game_loop(win, path_tiles, mode):
                     enemy_spawn_index = 0
                     current_wave += 1
 
-            wave_button = pygame.Rect(WIDTH // 2 - 60, 10, 120, 30)
+            wave_button = pygame.Rect(WIDTH // 2 - 60, 5, 120, 30)
             pygame.draw.rect(win, DARK_GRAY, wave_button)
             wave_text = FONT.render("Start wave", True, WHITE)
-            win.blit(wave_text, (WIDTH // 2 - 45, 15))
+            win.blit(wave_text, (WIDTH // 2 - 45, 10))
 
         hp_text = FONT.render(f"Zycie: {hp}", True, BLACK)
         win.blit(hp_text, (WIDTH - 100, 10))
@@ -235,7 +232,7 @@ def game_loop(win, path_tiles, mode):
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                return False
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mx, my = pygame.mouse.get_pos()
@@ -287,3 +284,11 @@ def game_loop(win, path_tiles, mode):
                     grid_x, grid_y = mx // TILE_SIZE, my // TILE_SIZE
                     if TILE_SIZE <= my < HEIGHT - TILE_SIZE:
                         selected_tile = (grid_x, grid_y)
+    
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    current_fps = 120
+            
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    current_fps = 60

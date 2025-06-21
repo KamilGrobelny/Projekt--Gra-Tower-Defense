@@ -1,3 +1,4 @@
+"""Ustawienia: rozmiary okienka, kolory, dane dla wrogów i wież."""
 import pygame
 
 WIDTH, HEIGHT = 800, 600
@@ -29,14 +30,14 @@ BAR_WIDTH = 40
 BAR_HEIGHT = 5
 
 ENEMY_DATA = {
-    'small':{'hp':50, 'speed':1.5, 'image':'images/enemy_small.png', 'damage': 1},
-    'normal':{'hp':100, 'speed':1, 'image':'images/enemy_normal.png', 'damage': 2},
-    'boss':{'hp':200, 'speed':0.4, 'image':'images/enemy_boss.png', 'damage': 4},
-    'paker':{'hp':250, 'speed':0.3, 'image':'images/enemy_paker.png', 'damage': 5},
-    'skeleton':{'hp':50, 'speed':1, 'image':'images/enemy_skeleton.png', 'damage': 1},
-    'fire':{'hp':30, 'speed':1.5, 'image':'images/enemy_fire.png', 'damage': 1},
-    'female':{'hp':80, 'speed':1.2, 'image':'images/enemy_female.png', 'damage': 2},
-    'soldier':{'hp':150, 'speed':0.7, 'image':'images/enemy_soldier.png', 'damage': 3}
+    'small': {'hp': 50, 'speed': 1.5, 'image': 'images/enemy_small.png', 'damage': 1},
+    'normal': {'hp': 100, 'speed': 1, 'image': 'images/enemy_normal.png', 'damage': 2},
+    'boss': {'hp': 200, 'speed': 0.4, 'image': 'images/enemy_boss.png', 'damage': 4},
+    'paker': {'hp': 250, 'speed': 0.3, 'image': 'images/enemy_paker.png', 'damage': 5},
+    'skeleton': {'hp': 50, 'speed': 1, 'image': 'images/enemy_skeleton.png', 'damage': 1},
+    'fire': {'hp': 30, 'speed': 1.5, 'image': 'images/enemy_fire.png', 'damage': 1},
+    'female': {'hp': 80, 'speed': 1.2, 'image': 'images/enemy_female.png', 'damage': 2},
+    'soldier': {'hp': 150, 'speed': 0.7, 'image': 'images/enemy_soldier.png', 'damage': 3}
     }
 
 TOWER_DATA = {

@@ -54,16 +54,16 @@ class Enemy:
             self.x += dx / dist * self.speed
             self.y += dy / dist * self.speed
 
-    def draw(self, win: pygame.Surface) -> None:
+    def draw(self, window: pygame.Surface) -> None:
         """Rysuje wroga oraz pasek życia."""
-        win.blit(self.image, self.image_top_left_corner())
+        window.blit(self.image, self.image_top_left_corner())
 
         bar_x = self.x - BAR_WIDTH // 2
         bar_y = self.y - 20
         current_width = BAR_WIDTH * (self.hp / self.max_hp)
         
-        pygame.draw.rect(win, RED, (bar_x, bar_y, BAR_WIDTH, BAR_HEIGHT))
-        pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))
+        pygame.draw.rect(window, RED, (bar_x, bar_y, BAR_WIDTH, BAR_HEIGHT))
+        pygame.draw.rect(window, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))
 
     def rotate(self) -> None:
         """Obraca wroga zgodnie z kierunkiem ścieżki."""
@@ -83,10 +83,10 @@ class Enemy:
         image_y = self.y - image.height // 2
         return (image_x, image_y)
     
-    def death(self, win: pygame.Surface, step: int = 10) -> bool:
+    def death(self, window: pygame.Surface, step: int = 10) -> bool:
         """Animacja umierania przez powolne znikanie."""
         alpha = self.image.get_alpha()
         alpha = max(0, alpha - step)
         self.image.set_alpha(alpha)
-        win.blit(self.image, self.image_top_left_corner())
+        window.blit(self.image, self.image_top_left_corner())
         return alpha == 0

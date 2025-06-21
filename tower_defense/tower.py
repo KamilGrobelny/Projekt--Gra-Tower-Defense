@@ -1,7 +1,6 @@
 import math
 import pygame
 
-from typing import Optional
 from enemy import Enemy
 from settings import TILE_SIZE, DARK_GRAY, TOWER_DATA, TOWER_LEVEL_UP_DATA
 
@@ -30,17 +29,19 @@ class Tower:
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
         self.is_max_level = False
 
-    def draw(self, win: pygame.Surface) -> None:
+    def draw(self, window: pygame.Surface) -> None:
         """Rysuje wieżę oraz zasięg."""
         image = self.image.get_rect()
         image_x = self.x - image.width // 2
         image_y = self.y - image.height // 2
-        win.blit(self.image, (image_x, image_y))
-        pygame.draw.circle(win, DARK_GRAY, (self.x, self.y), self.range, 1)
+        window.blit(self.image, (image_x, image_y))
+        pygame.draw.circle(window, DARK_GRAY, (self.x, self.y), self.range, 1)
 
-    
-    def shoot(self, enemies: list[Enemy]) -> Optional[bool]:
+    def shoot(self, enemies: list[Enemy]) -> bool:
         """Strzela do wrogów znajdujących się w zasięgu."""
+
+        tower4_explodes = False
+
         if self.timer > 0:
             self.timer -= 1
 
@@ -59,18 +60,17 @@ class Tower:
             self.timer = self.cooldown
 
         elif self.tower_type == 4:
-            tower4_explodes = False
             for enemy in enemies:
                 if math.hypot(enemy.x - self.x, enemy.y - self.y) <= 25:
                     tower4_explodes = True
                     break
-                
+
             if tower4_explodes:
                 for enemy in enemies:
                     if math.hypot(enemy.x - self.x, enemy.y - self.y) <= self.range:
                         enemy.hp -= self.damage
 
-            return tower4_explodes
+        return tower4_explodes
     
     def rotate(self, enemies: list[Enemy]) -> None:
         """Obraca wieżę w stronę wroga."""
@@ -84,7 +84,6 @@ class Tower:
                     self.image = pygame.transform.rotate(self.orig_image, self.angle)
                     break
 
-    
     def level_up(self) -> None:
         """Ulepsza wieżę."""
         self.range = TOWER_LEVEL_UP_DATA[self.tower_type]['range']

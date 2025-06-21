@@ -6,11 +6,14 @@ import pygame
 
 from maps import MAPS
 from settings import (
-    WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT,
+    WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT, BIG_FONT, TILE_SIZE,
     STARTING_MONEY, TOWER_COST, TOWER_LEVEL_UP_COST, ENEMY_REWARD,
-    FPS, TILE_SIZE, BASE_HP
+    FPS, SPEED_UP_FPS, BASE_HP, MAX_SPAWN_INTERVAL, MIN_SPAWN_INTERVAL
     )
-from grid import draw_map_background, draw_sidebar, draw_grid, map_backgrounds, textures
+from grid import (
+    draw_map_background, draw_sidebar, draw_grid, load_ui_textures,
+    load_map_backgrounds
+    )
 from enemy import Enemy
 from tower import Tower
 from waves import WAVES
@@ -19,23 +22,34 @@ def button_rect(a: int) -> pygame.Rect:
     """Zwraca prostokąt (przycisk) dla wież oraz ulepszenia."""
     return pygame.Rect(10 + 130 * a, HEIGHT - 35, 120, 30)
 
-def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str) -> bool:
+def center_text(text: pygame.Surface, box: pygame.Rect) -> tuple[int, int]:
+    """Zwraca współrzędne przy których tekst będzie wyśrodkowany"""
+    return (
+        box.centerx - text.get_width()//2,
+        box.centery - text.get_height()//2
+        )
+
+
+def game_loop(window: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str) -> bool:
     """
     Główna pętla gry.
 
     Atrybuty:
-        win: Powierzchnia do rysowania
+        window: Powierzchnia do rysowania
         path_tiles: lista kafelków ścieżki
         mode: tryb gry
 
     Zwraca:
-        bool: True- gracz wrócił do menu, False- zakończył grę.
+        bool: True: gracz wrócił do menu, False: zakończył grę.
     """
 
     game_over_img = pygame.image.load(os.path.join('images', 'game_over.png')).convert()
     game_won_img = pygame.image.load(os.path.join('images', 'game_won.png')).convert()
     game_over_img = pygame.transform.scale(game_over_img, (WIDTH, HEIGHT))
     game_won_img = pygame.transform.scale(game_won_img, (WIDTH, HEIGHT))
+
+    textures = load_ui_textures()
+    map_backgrounds = load_map_backgrounds()
 
     for key, val in MAPS.items():
         if path_tiles == val:
@@ -49,9 +63,10 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
     dying_enemies = []
     selected_tile = None
     spawn_timer = 0
+    spawn_interval = MAX_SPAWN_INTERVAL
     current_fps = FPS
 
-    tower_button = [button_rect(i) for i in range(4)]
+    tower_buttons = [button_rect(i) for i in range(4)]
 
     clock = pygame.time.Clock()
     run = True
@@ -70,20 +85,21 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
     survival_timer_active = False             
 
     try:
-        with open("best_time.txt", "r") as f:
+        with open('best_time.txt', 'r') as f:
             best_time_seconds = int(f.read())
     except FileNotFoundError:
         best_time_seconds = 0
 
     while run:
         clock.tick(current_fps)
-        win.fill(WHITE)
+        window.fill(WHITE)
 
         if hp <= 0:
             run = False
-            win.blit(game_over_img, (0, 0))
-            game_over_text = FONT.render('Game over', True, WHITE)
-            win.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, 150))
+            window.blit(game_over_img, (0, 0))
+            game_over_text = BIG_FONT.render('Game over', True, WHITE)
+            window.blit(game_over_text,
+                        (WIDTH//2 - game_over_text.get_width()//2, 140))
 
             if mode == 'Nieskończoność':
                 total_seconds = survival_time_frames // FPS
@@ -93,14 +109,19 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                 record_seconds = best_time_seconds % 60
 
                 time_text = FONT.render(
-                    f"Czas: {minutes:02}:{seconds:02}  |  Rekord: {record_minutes:02}:{record_seconds:02}",
+                    f'Czas: {minutes:02}:{seconds:02}  |  Rekord: '
+                    f'{record_minutes:02}:{record_seconds:02}',
                     True, WHITE
                 )
-                win.blit(time_text, (WIDTH // 2 - time_text.get_width() // 2, 200))
+                window.blit(time_text, 
+                            (WIDTH//2 - time_text.get_width()//2, 200))
 
-            back_button = pygame.Rect(WIDTH // 2 - 100, 280, 200, 40)
-            pygame.draw.rect(win, DARK_GRAY, back_button)
-            win.blit(FONT.render("Powrót do menu", True, WHITE), (back_button.x + 20, back_button.y + 10))
+            back_button = pygame.Rect(WIDTH//2 - 100, 280, 200, 40)
+            pygame.draw.rect(window, DARK_GRAY, back_button)
+            window.blit(
+                (text:=FONT.render('Powrót do menu', True, WHITE)),
+                center_text(text, back_button)
+                )
 
             pygame.display.update()
 
@@ -113,15 +134,16 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                         if back_button.collidepoint(mx, my):
                             return True
 
-
         if current_wave >= len(WAVES[map_name]) and mode == 'Kampania':
-            win.blit(game_won_img, (0, 0))
-            game_win_text = FONT.render('You won!', True, WHITE)
-            win.blit(game_win_text, (WIDTH // 2 - game_win_text.get_width() // 2, 150))
+            window.blit(game_won_img, (0, 0))
+            game_win_text = BIG_FONT.render('You won!', True, WHITE)
+            window.blit(game_win_text, 
+                        (WIDTH//2 - game_win_text.get_width()//2, 150))
 
-            back_button = pygame.Rect(WIDTH // 2 - 100, 220, 200, 40)
-            pygame.draw.rect(win, DARK_GRAY, back_button)
-            win.blit(FONT.render("Powrót do menu", True, WHITE), (back_button.x + 20, back_button.y + 10))
+            back_button = pygame.Rect(WIDTH//2 - 100, 220, 200, 40)
+            pygame.draw.rect(window, DARK_GRAY, back_button)
+            window.blit(FONT.render('Powrót do menu', True, WHITE), 
+                        (back_button.x + 20, back_button.y + 10))
 
             pygame.display.update()
             run = False
@@ -134,12 +156,11 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                         if back_button.collidepoint(mx, my):
                             return True
 
-        draw_map_background(win, map_name)
-        draw_sidebar(win, textures)
-        draw_grid(win, selected_tile)
+        draw_map_background(window, map_name, map_backgrounds)
+        draw_sidebar(window, textures)
+        draw_grid(window, selected_tile)
 
         if mode == 'Nieskończoność':
-            spawn = 120
 
             if survival_timer_active:
                 survival_time_frames += 1
@@ -149,7 +170,7 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
 
                 if total_seconds > best_time_seconds:
                     best_time_seconds = total_seconds
-                    with open("best_time.txt", "w") as f:
+                    with open('best_time.txt', 'w') as f:
                         f.write(str(best_time_seconds))
             else:
                 total_seconds = survival_time_frames // FPS
@@ -157,16 +178,17 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                 seconds = total_seconds % 60
 
             time_text = FONT.render(
-                f"Czas: {minutes:02}:{seconds:02}  |  Rekord: {best_time_seconds // 60:02}:{best_time_seconds % 60:02}",
+                f'Czas: {minutes:02}:{seconds:02}  |  Rekord: '
+                f'{best_time_seconds // 60:02}:{best_time_seconds % 60:02}',
                 True, BLACK
-            )
-            win.blit(time_text, (10, 5))
+                )
+            window.blit(time_text, (10, 10))
 
             if not wave_in_progress:
                 wave_button = pygame.Rect(WIDTH // 2 - 60, 5, 120, 30)
-                pygame.draw.rect(win, DARK_GRAY, wave_button)
-                start_text = FONT.render("Start ", True, WHITE)
-                win.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, 10))
+                pygame.draw.rect(window, DARK_GRAY, wave_button)
+                start_text = FONT.render('Start ', True, WHITE)
+                window.blit(start_text, center_text(start_text, wave_button))
             else:
                 spawn_timer += 1
                 hp_increase_timer += 1
@@ -174,15 +196,23 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                     enemy_hp_multiplier *= 1.1
                     hp_increase_timer = 0
 
-                if spawn_timer >= max(spawn, 10):
-                    enemy_choice = choice(['small', 'normal', 'boss', 'fire', 'female', 'paker', 'skeleton', 'soldier'])
-                    enemies.append(Enemy(path_tiles, enemy_choice, hp_multiplier=enemy_hp_multiplier))
+                if spawn_timer >= max(spawn_interval, MIN_SPAWN_INTERVAL):
+                    enemy_choice = choice([
+                        'small', 'normal', 'boss', 'fire','female', 'paker',
+                        'skeleton', 'soldier'
+                        ])
+                    enemies.append(Enemy(
+                        path_tiles, enemy_choice, 
+                        hp_multiplier=enemy_hp_multiplier
+                        ))
                     spawn_timer = 0
-                    spawn -= 1
+                    spawn_interval -= 1
 
-        if mode == 'Kampania':
-            wave_text = FONT.render(f"Fala: {current_wave + 1}/{len(WAVES[map_name])}", True, BLACK)
-            win.blit(wave_text, (10, 10))
+        elif mode == 'Kampania':
+            wave_text = FONT.render(
+                f'Fala: {current_wave + 1}/{len(WAVES[map_name])}', True, BLACK
+                )
+            window.blit(wave_text, (10, 10))
 
             if wave_in_progress and current_wave < len(WAVES[map_name]):
                 wave = WAVES[map_name][current_wave]
@@ -203,28 +233,30 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                     enemy_spawn_index = 0
                     current_wave += 1
 
-            wave_button = pygame.Rect(WIDTH // 2 - 60, 5, 120, 30)
-            pygame.draw.rect(win, DARK_GRAY, wave_button)
-            wave_text = FONT.render("Start wave", True, WHITE)
-            win.blit(wave_text, (WIDTH // 2 - 45, 10))
+            wave_button = pygame.Rect(WIDTH//2 - 90, 5, 180, 30)
+            pygame.draw.rect(window, DARK_GRAY, wave_button)
+            wave_text = FONT.render('Rozpocznij falę', True, WHITE)
+            window.blit(wave_text, center_text(wave_text, wave_button))
 
-        hp_text = FONT.render(f"Zycie: {hp}", True, BLACK)
-        win.blit(hp_text, (WIDTH - 100, 10))
+        hp_text = FONT.render(f'Życie: {hp}', True, BLACK)
+        window.blit(hp_text, (WIDTH - 100, 10))
 
-        money_text = FONT.render(f"Pieniądze: {money}", True, BLACK)
-        win.blit(money_text, (WIDTH - 290, 10))
+        money_text = FONT.render(f'Pieniądze: {money}', True, BLACK)
+        window.blit(money_text, (WIDTH - 290, 10))
 
-        pygame.draw.rect(win, DARK_GRAY, button_rect(5))
-        win.blit(FONT.render(f"Ulepszenie", True, WHITE), (667, HEIGHT - 30))
+        upgrade_button = button_rect(5)
+        pygame.draw.rect(window, DARK_GRAY, upgrade_button)
+        upgrade_text = FONT.render(f'Ulepszenie', True, WHITE)
+        window.blit(upgrade_text, center_text(upgrade_text, upgrade_button))
 
         for number in range(4):
-            pygame.draw.rect(win, DARK_GRAY, tower_button[number])
-            win.blit(FONT.render(f"Wieża {number + 1}", True, WHITE), (35 + 130 * number, HEIGHT - 30))
+            pygame.draw.rect(window, DARK_GRAY, tower_buttons[number])
+            window.blit(FONT.render(f'Wieża {number + 1}', True, WHITE), (35 + 130*number, HEIGHT - 30))
 
         for enemy in enemies:
             enemy.move()
             enemy.rotate()
-            enemy.draw(win)
+            enemy.draw(window)
 
             if enemy.hp <= 0:
                 money += ENEMY_REWARD.get(enemy.type)
@@ -235,12 +267,12 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                 hp = max(hp - enemy.damage, 0)
 
         for enemy in dying_enemies:
-            if enemy.death(win):
+            if enemy.death(window):
                 dying_enemies.remove(enemy)
 
         for tower in towers:
             tower.rotate(enemies)
-            tower.draw(win)
+            tower.draw(window)
             if tower.shoot(enemies):
                 towers.remove(tower)
 
@@ -268,7 +300,7 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                     ]
 
                     if (
-                        tower_button[number].collidepoint(mx, my)
+                        tower_buttons[number].collidepoint(mx, my)
                         and selected_tile
                         and condition[number]
                     ):
@@ -282,7 +314,7 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                                 selected_tile = None
 
                 if (
-                    button_rect(5).collidepoint(mx, my)
+                    upgrade_button.collidepoint(mx, my)
                     and selected_tile
                 ):
                     for tower in towers:
@@ -303,8 +335,8 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
     
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    current_fps = 120
+                    current_fps = SPEED_UP_FPS
             
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-                    current_fps = 60
+                    current_fps = FPS

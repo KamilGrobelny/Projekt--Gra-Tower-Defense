@@ -1,6 +1,6 @@
 """Słownik MAPS definuje różne rodzaje map do gry."""
 MAPS = {
-    "Mapa 1": (
+    'Mapa 1': (
         [(x, 2) for x in range(18)]
         + [(18, y) for y in range(2, 4)]
         + [(x, 4) for x in range(18, 2, -1)]
@@ -11,7 +11,7 @@ MAPS = {
         + [(14, y) for y in range(6, 12)]
         + [(x, 12) for x in range(14, 20)]
     ),
-    "Mapa 2": (
+    'Mapa 2': (
         [(x, 2) for x in range(3)]
         + [(x, x) for x in range(2, 8)]
         + [(8, 6), (9, 5), (10, 4), (11, 3), (12, 2)]
@@ -24,7 +24,7 @@ MAPS = {
         + [(x, 11) for x in range(8, 18)]
         + [(18, 12), (19, 13)]
     ),
-    "Mapa 3": (
+    'Mapa 3': (
         [(x, 2) for x in range(5)]
         + [(4,y) for y in range(2,7)]
         + [(x, 6) for x in range(4,0,-1)]

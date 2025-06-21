@@ -1,32 +1,33 @@
 import pygame
 import os
 
-from typing import Union
-from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT
+from typing import Optional
+from game import center_text
+from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT, BIG_FONT
 
 
-def choose_mode(win: pygame.Surface) -> Union[str, None]:
+def choose_mode(window: pygame.Surface) -> Optional[str]:
     """Funkcja pozwala na wybranie trybu gry."""
-    options = ["Nieskończoność", "Kampania"]
-    background = pygame.image.load(os.path.join("images", "menu.png")).convert()
+    options = ['Nieskończoność', 'Kampania']
+    background = pygame.image.load(os.path.join('images', 'menu.png')).convert()
 
     while True:
-        win.blit(background, (0, 0))
+        window.blit(background, (0, 0))
 
-        title_text = FONT.render("Wybierz tryb gry:", True, BLACK)
-        win.blit(
+        title_text = BIG_FONT.render('Wybierz tryb gry:', True, BLACK)
+        window.blit(
             title_text,
-            (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 2 + 20)
+            (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 2 - 20)
         )
 
         buttons = []
         for i, name in enumerate(options):
-            rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
-            buttons.append((rect, name))
-            pygame.draw.rect(win, DARK_GRAY, rect)
-            win.blit(
-                FONT.render(name, True, WHITE),
-                (rect.x + 20, rect.y + 10),
+            temp_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
+            buttons.append((temp_rect, name))
+            pygame.draw.rect(window, DARK_GRAY, temp_rect)
+            window.blit(
+                (text := FONT.render(name, True, WHITE)),
+                center_text(text, temp_rect),
             )
 
         pygame.display.update()
@@ -41,27 +42,27 @@ def choose_mode(win: pygame.Surface) -> Union[str, None]:
                         return name
 
 
-def choose_map(win: pygame.Surface, maps: dict[str, list[tuple[int, int]]]) -> Union[list[tuple[int, int]], None]:
+def choose_map(window: pygame.Surface, maps: dict[str, list[tuple[int, int]]]) -> Optional[list[tuple[int, int]]]:
     """Funkcja pozwala na wybranie rodzaju mapy."""
-    background = pygame.image.load(os.path.join("images","menu.png")).convert()
+    background = pygame.image.load(os.path.join('images','menu.png')).convert()
 
     while True:
-        win.blit(background, (0, 0))
+        window.blit(background, (0, 0))
 
-        title_text = FONT.render("Wybierz mapę:", True, BLACK)
-        win.blit(
+        title_text = BIG_FONT.render('Wybierz mapę:', True, BLACK)
+        window.blit(
             title_text,
-            (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 2 + 20)
+            (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 2 - 20)
         )
 
         buttons = []
         for i, name in enumerate(maps.keys()):
-            rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
-            buttons.append((rect, name))
-            pygame.draw.rect(win, DARK_GRAY, rect)
-            win.blit(
-                FONT.render(name, True, WHITE),
-                (rect.x + 20, rect.y + 10)
+            temp_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
+            buttons.append((temp_rect, name))
+            pygame.draw.rect(window, DARK_GRAY, temp_rect)
+            window.blit(
+                (text := FONT.render(name, True, WHITE)),
+                center_text(text, temp_rect),
             )
 
         pygame.display.update()

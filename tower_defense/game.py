@@ -1,5 +1,6 @@
-import pygame
 from random import choice
+
+import pygame
 
 from maps import MAPS
 from settings import (
@@ -13,9 +14,22 @@ from tower import Tower
 from waves import WAVES
 
 def button_rect(a: int) -> pygame.Rect:
+    """Zwraca prostokąt (przycisk) dla wież oraz ulepszenia."""
     return pygame.Rect(10 + 130 * a, HEIGHT - 35, 120, 30)
 
 def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str) -> bool:
+    """
+    Główna pętla gry.
+
+    Atrybuty:
+        win: Powierzchnia do rysowania
+        path_tiles: lista kafelków ścieżki
+        mode: tryb gry
+
+    Zwraca:
+        bool: True- gracz wrócił do menu, False- zakończył grę.
+    """
+
     game_over_img = pygame.image.load("images/game_over.png").convert()
     game_won_img = pygame.image.load("images/game_won.png").convert()
     game_over_img = pygame.transform.scale(game_over_img, (WIDTH, HEIGHT))
@@ -63,7 +77,7 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
         clock.tick(current_fps)
         win.fill(WHITE)
 
-        if hp < 1:
+        if hp <= 0:
             run = False
             win.blit(game_over_img, (0, 0))
             game_over_text = FONT.render('Game over', True, WHITE)
@@ -118,7 +132,6 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                         if back_button.collidepoint(mx, my):
                             return True
 
-
         draw_map_background(win, map_name)
         draw_sidebar(win, textures)
         draw_grid(win, selected_tile)
@@ -160,7 +173,8 @@ def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str)
                     hp_increase_timer = 0
 
                 if spawn_timer >= max(spawn, 10):
-                    enemies.append(Enemy(path_tiles, choice(['small', 'normal', 'boss', 'fire', 'female', 'paker', 'skeleton', 'soldier']), hp_multiplier=enemy_hp_multiplier))
+                    enemy_choice = choice(['small', 'normal', 'boss', 'fire', 'female', 'paker', 'skeleton', 'soldier'])
+                    enemies.append(Enemy(path_tiles, enemy_choice, hp_multiplier=enemy_hp_multiplier))
                     spawn_timer = 0
                     spawn -= 1
 

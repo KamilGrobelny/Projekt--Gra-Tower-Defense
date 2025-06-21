@@ -5,7 +5,16 @@ from settings import TILE_SIZE, RED, GREEN, BAR_WIDTH, BAR_HEIGHT, ENEMY_DATA, W
 
 
 class Enemy:
+    """Klasa reprezentuje wrogów.
+
+    Atrybuty:
+        path_coords: lista współrzędnych ścieżki
+        enemy_type: nazwa wroga
+        hp_multiplier: mnożnik hp.
+    """
+
     def __init__(self, path_coords: list[tuple[int, int]], enemy_type: str, hp_multiplier: float = 1.0) -> None:
+        """Inicjuje wroga podanego typu."""
         offset = random.randint(-20, 20)
         path = [
             (x * TILE_SIZE + TILE_SIZE // 2 + offset, y * TILE_SIZE + TILE_SIZE // 2 + offset)
@@ -29,6 +38,7 @@ class Enemy:
         self.type = enemy_type
     
     def move(self) -> None:
+        """Porusza się z odpowiednia prędkością po ścieżce."""
         if self.path_index + 1 >= len(self.path):
             return 
 
@@ -44,6 +54,7 @@ class Enemy:
             self.y += dy / dist * self.speed
 
     def draw(self, win: pygame.Surface) -> None:
+        """Rysuje wroga oraz pasek życia."""
         win.blit(self.image, self.image_top_left_corner())
 
         bar_x = self.x - BAR_WIDTH // 2
@@ -54,6 +65,7 @@ class Enemy:
         pygame.draw.rect(win, GREEN, (bar_x, bar_y, current_width, BAR_HEIGHT))
 
     def rotate(self) -> None:
+        """Obraca wroga zgodnie z kierunkiem ścieżki."""
         if self.path_index + 1 >= len(self.path):
             return
         
@@ -64,12 +76,14 @@ class Enemy:
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
 
     def image_top_left_corner(self) -> tuple[int, int]:
+        """Zwraca współrzędne lewego górnego rogu grafiki wroga."""
         image = self.image.get_rect()
         image_x = self.x - image.width // 2
         image_y = self.y - image.height // 2
         return (image_x, image_y)
     
     def death(self, win: pygame.Surface, step: int = 10) -> bool:
+        """Animacja umierania przez powolne znikanie."""
         alpha = self.image.get_alpha()
         alpha = max(0, alpha - step)
         self.image.set_alpha(alpha)

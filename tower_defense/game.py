@@ -1,4 +1,5 @@
 import pygame
+import os
 from random import choice
 
 from maps import MAPS
@@ -16,8 +17,8 @@ def button_rect(a: int) -> pygame.Rect:
     return pygame.Rect(10 + 130 * a, HEIGHT - 35, 120, 30)
 
 def game_loop(win: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str) -> bool:
-    game_over_img = pygame.image.load("images/game_over.png").convert()
-    game_won_img = pygame.image.load("images/game_won.png").convert()
+    game_over_img = pygame.image.load(os.path.join('images', 'game_over.png')).convert()
+    game_won_img = pygame.image.load(os.path.join('images', 'game_won.png')).convert()
     game_over_img = pygame.transform.scale(game_over_img, (WIDTH, HEIGHT))
     game_won_img = pygame.transform.scale(game_won_img, (WIDTH, HEIGHT))
 

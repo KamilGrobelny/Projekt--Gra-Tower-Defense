@@ -29,7 +29,6 @@ class Tower:
         self.image = pygame.transform.rotate(self.orig_image, self.angle)
         self.is_max_level = False
 
-    
     def draw(self, win: pygame.Surface) -> None:
         """Rysuje wieżę oraz zasięg."""
         image = self.image.get_rect()
@@ -43,59 +42,46 @@ class Tower:
         """Strzela do wrogów znajdujących się w zasięgu."""
         if self.timer > 0:
             self.timer -= 1
-            return
 
-        for enemy in enemies:
-            if self.tower_type == 3 or self.tower_type == 4:
-                break
-            dist = math.hypot(enemy.x - self.x, enemy.y - self.y)
-            if dist <= self.range:
-                enemy.hp -= self.damage
-                self.timer = self.cooldown
-                break
-        
-        if self.tower_type == 3:
-            enemies_for_tower3 = []
+        elif self.tower_type in (1, 2):
+            for enemy in enemies:
+                dist = math.hypot(enemy.x - self.x, enemy.y - self.y)
+                if dist <= self.range:
+                    enemy.hp -= self.damage
+                    self.timer = self.cooldown
+                    break
+
+        elif self.tower_type == 3:
             for enemy in enemies:
                 if math.hypot(enemy.x - self.x, enemy.y - self.y) <= self.range:
-                    enemies_for_tower3.append(enemy)
-                
-            for enemy in enemies_for_tower3:
-                enemy.hp -= self.damage
+                    enemy.hp -= self.damage
             self.timer = self.cooldown
 
-        tower4_shots = False
-        
-        if self.tower_type == 4:
-            enemies_for_tower4 = []
+        elif self.tower_type == 4:
+            tower4_explodes = False
             for enemy in enemies:
                 if math.hypot(enemy.x - self.x, enemy.y - self.y) <= 25:
-                    tower4_shots = True
+                    tower4_explodes = True
+                    break
                 
-            if tower4_shots:
+            if tower4_explodes:
                 for enemy in enemies:
                     if math.hypot(enemy.x - self.x, enemy.y - self.y) <= self.range:
-                        enemies_for_tower4.append(enemy)
+                        enemy.hp -= self.damage
 
-                for enemy in enemies_for_tower4:
-                    enemy.hp -= self.damage
-
-        return tower4_shots
-
+            return tower4_explodes
     
     def rotate(self, enemies: list[Enemy]) -> None:
         """Obraca wieżę w stronę wroga."""
-        if self.tower_type == 4:
-            return
-
-        for enemy in enemies:
-            dist_x = enemy.x - self.x
-            dist_y = enemy.y - self.y
-            dist = math.hypot(dist_x, dist_y)
-            if dist <= self.range:
-                self.angle = math.degrees(math.atan2(-dist_y, dist_x)) - 90
-                self.image = pygame.transform.rotate(self.orig_image, self.angle)
-                break
+        if self.tower_type != 4:
+            for enemy in enemies:
+                dist_x = enemy.x - self.x
+                dist_y = enemy.y - self.y
+                dist = math.hypot(dist_x, dist_y)
+                if dist <= self.range:
+                    self.angle = math.degrees(math.atan2(-dist_y, dist_x)) - 90
+                    self.image = pygame.transform.rotate(self.orig_image, self.angle)
+                    break
 
     
     def level_up(self) -> None:

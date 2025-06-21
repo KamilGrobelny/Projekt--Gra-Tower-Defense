@@ -14,7 +14,8 @@ def main():
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Tower Defense")
 
-    while True:
+    new_game = True
+    while new_game:
         mode = choose_mode(win)
         if not mode:
             break
@@ -23,7 +24,7 @@ def main():
         if not path:
             break
 
-        game_loop(win, path, mode)
+        new_game = game_loop(win, path, mode)
 
     pygame.quit()
 

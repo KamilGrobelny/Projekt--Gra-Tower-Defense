@@ -43,7 +43,7 @@ def choose_mode(win: pygame.Surface) -> Union[str, None]:
 
 def choose_map(win: pygame.Surface, maps: dict[str, list[tuple[int, int]]]) -> Union[list[tuple[int, int]], None]:
     """Funkcja pozwala na wybranie rodzaju mapy."""
-    background = pygame.image.load(os.path.join("images", "menu.png")).convert()
+    background = pygame.image.load(os.path.join("images","menu.png")).convert()
 
     while True:
         win.blit(background, (0, 0))

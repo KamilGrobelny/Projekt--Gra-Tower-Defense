@@ -30,6 +30,8 @@ By powstrzymać przeciwników gracz ma do dyspozycji 4 wieże. Pierwsza jest szy
 trzecia to "moździerz" który potrzebuje długiego czasu ładowania ale atakuje przeciwników w niewielkim obszarze, a nie tylko pojedyńczych wrogów, ma on też największy zasięg. Czwarta wieża docelowo ma 
 zostać barykadą ale na czas prototypu nie spełnia wszystkich swoich funkcji i sugeruję jej nie używać. Stawiana ona może być tylko na środku ścieżki. Pozostałe wieże stawiamy poza ścieżką.
 
+Wieże można postawić po przez naciśnięcie kafelka planszy. Podświetli się on na niebiesko, gdy jest on poza ścieżka (dla wież 1, 2, 3) albo na czerwono, gdy jest on na ścieżce (dla wieży 4).
+
 Każda z wież ma swój zasięg rażenia widoczny po postawieniu. 
 
 Wieże mogą być jeden raz ulepszone, działa to przez zbudowanie drugiej wieży na już istniejącej. Ulepszenie zwiększa niektóre parametry zależnie od wieży.

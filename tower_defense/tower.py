@@ -7,7 +7,8 @@ from settings import TILE_SIZE, DARK_GRAY, TOWER_DATA, TOWER_LEVEL_UP_DATA
 
 
 class Tower:
-    """Klasa reprezentuje wieże.
+    """
+    Klasa reprezentuje wieże.
 
     Atrybuty:
         tower_type: numer wieży

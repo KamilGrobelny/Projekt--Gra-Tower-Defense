@@ -5,7 +5,8 @@ from settings import TILE_SIZE, RED, GREEN, BAR_WIDTH, BAR_HEIGHT, ENEMY_DATA, W
 
 
 class Enemy:
-    """Klasa reprezentuje wrogów.
+    """
+    Klasa reprezentuje wrogów.
 
     Atrybuty:
         path_coords: lista współrzędnych ścieżki

@@ -1,10 +1,11 @@
 import unittest
-from unittest.mock import patch, MagicMock
 import pygame
-from enemy import Enemy
+import os
+
+from unittest.mock import patch, MagicMock
 from settings import TILE_SIZE, TOWER_LEVEL_UP_DATA
+from enemy import Enemy
 from tower import Tower
-import grid
 
 
 class TestEnemy(unittest.TestCase):
@@ -12,7 +13,7 @@ class TestEnemy(unittest.TestCase):
     @patch('pygame.image.load')
     def setUp(self, mock_load, mock_rotate):
         pygame.init()
-
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
         dummy_surface = pygame.Surface((40, 40), pygame.SRCALPHA)
 
         mock_image = MagicMock()
@@ -40,7 +41,6 @@ class TestEnemy(unittest.TestCase):
         self.assertIsInstance(self.enemy.angle, float)
 
     def test_death_fade(self):
-
         mock_surface = MagicMock()
         mock_surface.get_alpha.return_value = 5
         mock_surface.set_alpha.return_value = None
@@ -51,9 +51,11 @@ class TestEnemy(unittest.TestCase):
         done = self.enemy.death(window, step=10)
 
         self.assertTrue(done)
-    
+
+
 class TestTower(unittest.TestCase):
     def setUp(self):
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
         self.grid_x = 1
         self.grid_y = 2
         self.tower_type = 1
@@ -106,15 +108,15 @@ class TestTower(unittest.TestCase):
         self.tower.rotate([enemy])
         self.mock_rot.assert_called()
 
-class TestInteractions(unittest.TestCase):
 
+class TestInteractions(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
         pygame.init()
         pygame.display.set_mode((1, 1)) 
 
     def setUp(self):
-       
         self.tower = Tower(grid_x=5, grid_y=5, tower_type=1)
         self.enemy = Enemy([(0, 0), (10, 10)], 'normal', hp_multiplier=1.0)
         self.enemy.x = self.tower.x  
@@ -145,7 +147,6 @@ class TestInteractions(unittest.TestCase):
         self.assertNotEqual(self.tower.angle, initial_angle)
 
     def test_tower4_explodes(self):
-        
         tower4 = Tower(grid_x=5, grid_y=5, tower_type=4)
         self.enemy.x = tower4.x
         self.enemy.y = tower4.y
@@ -159,8 +160,10 @@ class TestInteractions(unittest.TestCase):
         result = tower4.shoot([self.enemy])
         self.assertFalse(result)   
 
+
 class TestEnemyTypes(unittest.TestCase):
     def setUp(self):
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
         pygame.init()
         pygame.display.set_mode((1, 1))
 
@@ -178,7 +181,6 @@ class TestEnemyTypes(unittest.TestCase):
         boss = Enemy([(0, 0), (100, 0)], 'boss', hp_multiplier=1.0)
         fire = Enemy([(0, 0), (100, 0)], 'fire', hp_multiplier=1.0)
 
-
         boss.hp -= 50
         fire.hp -= 50
 
@@ -191,7 +193,6 @@ class TestEnemyTypes(unittest.TestCase):
 
         self.assertGreater(paker.damage, fire.damage)
 
-    
-    
+
 if __name__ == '__main__':
     unittest.main()

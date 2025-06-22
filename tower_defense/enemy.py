@@ -16,12 +16,12 @@ class Enemy:
 
     def __init__(self, path_coords: list[tuple[int, int]], enemy_type: str, hp_multiplier: float = 1.0) -> None:
         """Inicjuje wroga podanego typu."""
-        offset = random.randint(-20, 20)
-        path = [
-            (x * TILE_SIZE + TILE_SIZE // 2 + offset, y * TILE_SIZE + TILE_SIZE // 2 + offset)
+        _offset = random.randint(-20, 20)
+        _path = [
+            (x * TILE_SIZE + TILE_SIZE // 2 + _offset, y * TILE_SIZE + TILE_SIZE // 2 + _offset)
             for x, y in path_coords
         ]
-        self.path = [(0, path[0][1])] + path + [(WIDTH, path[-1][-1])]
+        self.path = [(0, _path[0][1])] + _path + [(WIDTH, _path[-1][-1])]
         self.x, self.y = self.path[0]
         self.angle = -90
         self.path_index = 0

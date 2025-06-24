@@ -28,9 +28,9 @@ W celu przyspieszenia gry można przytrzymać klawisz spacji na klawiaturze.
 By powstrzymać przeciwników gracz ma do dyspozycji 4 wieże. Pierwsza jest szybkostrzelna i nie zadaje zbyt wielu obrażeń, druga zadaje więcej obrażeń ale potrzebuje czasu by wystrzelić poraz kolejny,
 trzecia to "moździerz" który potrzebuje długiego czasu ładowania ale atakuje przeciwników w niewielkim obszarze, a nie tylko pojedyńczych wrogów, ma on też największy zasięg. Czwarta wieża to mina która aktywuje się, kiedy przeciwnik na nią stanie i wybucha. Stawiana ona może być tylko na środku ścieżki. Pozostałe wieże stawiamy poza ścieżką. Każda z wież ma swój zasięg rażenia widoczny po postawieniu.
 
-Wieże można postawić przez naciśnięcie kafelka planszy, który podświetli się na czerwono, oraz naciśnięciu odpowiedniego przycisku na ekranie. 
+Wieże można postawić przez naciśnięcie kafelka planszy, który podświetli się na czerwono, oraz naciśnięciu odpowiedniego przycisku na ekranie. Każda z wież kosztuje 100.
 
-Wieże mogą być jeden raz ulepszone, działa to przez kliknięcie na wieżę, którą chcemy ulepszyć i naciśnięciu przycisku "Ulepszenie". Ulepszenie zwiększa niektóre parametry zależnie od wieży.
+Wieże mogą być jeden raz ulepszone, działa to przez kliknięcie na wieżę, którą chcemy ulepszyć i naciśnięciu przycisku "Ulepszenie". Ulepszenie zwiększa niektóre parametry zależnie od wieży i kosztuje 50.
 
 Wieże są kupowane za pieniądze eliminacji przeciwników na planszy.
 

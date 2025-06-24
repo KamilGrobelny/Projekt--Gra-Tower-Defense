@@ -2,9 +2,6 @@ import pygame
 import os
 from settings import WIDTH, HEIGHT, TILE_SIZE, GRAY, RED
 
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
 
 def load_map_backgrounds() -> dict[str, pygame.Surface]:
     """Ładuje wszystkie tła map z katalogu maps.

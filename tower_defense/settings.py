@@ -1,5 +1,4 @@
 """Ustawienia: rozmiary okienka, kolory, dane dla wrogów i wież."""
-import pygame
 import os
 
 WIDTH, HEIGHT = 800, 600
@@ -16,10 +15,6 @@ RED = (255, 0, 0)
 BLUE = (50, 50, 255)
 BROWN = (150, 75, 0)
 BLACK = (0, 0, 0)
-
-pygame.init()
-FONT = pygame.font.SysFont(None, 28)
-BIG_FONT = pygame.font.SysFont(None, 64)
 
 BASE_HP = 10
 STARTING_MONEY = 500

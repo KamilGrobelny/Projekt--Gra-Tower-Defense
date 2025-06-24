@@ -1,4 +1,5 @@
 @startuml Diagram klas
+skinparam classAttributeIconSize 0
 class Enemy {
     + path
     + x
@@ -17,18 +18,18 @@ class Enemy {
     + draw(self, win)
     + rotate(self)
     + image_top_left_corner(self)
-    + death(self, win, step=10)
+    + death(self, win, step=6)
 }
 
 class Tower {
-    + name
+    + tower_type
     + x
     + y
     + timer
     + range
     + cooldown
     + damage
-    + angle8
+    + angle
     + orig_image
     + image
     + is_max_level

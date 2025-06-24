@@ -3,10 +3,14 @@ import os
 
 from typing import Optional
 from game import center_text
-from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT, BIG_FONT
+from settings import WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK
 
 
-def choose_mode(window: pygame.Surface) -> Optional[str]:
+def choose_mode(
+        window: pygame.Surface,
+        FONT: pygame.font.Font,
+        BIG_FONT: pygame.font.Font
+        ) -> Optional[str]:
     """Funkcja pozwala na wybranie trybu gry."""
     options = ['Nieskończoność', 'Kampania']
     background = pygame.image.load(os.path.join('images', 'menu.png')).convert()
@@ -22,7 +26,7 @@ def choose_mode(window: pygame.Surface) -> Optional[str]:
 
         buttons = []
         for i, name in enumerate(options):
-            temp_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
+            temp_rect = pygame.Rect(WIDTH//2 - 100, HEIGHT//2 + 60 + i*60, 200, 40)
             buttons.append((temp_rect, name))
             pygame.draw.rect(window, DARK_GRAY, temp_rect)
             window.blit(
@@ -42,7 +46,12 @@ def choose_mode(window: pygame.Surface) -> Optional[str]:
                         return name
 
 
-def choose_map(window: pygame.Surface, maps: dict[str, list[tuple[int, int]]]) -> Optional[list[tuple[int, int]]]:
+def choose_map(
+        window: pygame.Surface,
+        maps: dict[str, list[tuple[int, int]]],
+        FONT: pygame.font.Font,
+        BIG_FONT: pygame.font.Font
+        ) -> Optional[str]:
     """Funkcja pozwala na wybranie rodzaju mapy."""
     background = pygame.image.load(os.path.join('images','menu.png')).convert()
 
@@ -52,12 +61,12 @@ def choose_map(window: pygame.Surface, maps: dict[str, list[tuple[int, int]]]) -
         title_text = BIG_FONT.render('Wybierz mapę:', True, BLACK)
         window.blit(
             title_text,
-            (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 2 - 20)
+            (WIDTH//2 - title_text.get_width()//2, HEIGHT//2 - 20)
         )
 
         buttons = []
         for i, name in enumerate(maps.keys()):
-            temp_rect = pygame.Rect(WIDTH // 2 - 100, HEIGHT // 2 + 60 + i * 60, 200, 40)
+            temp_rect = pygame.Rect(WIDTH//2 - 100, HEIGHT//2 + 60 + i*60, 200, 40)
             buttons.append((temp_rect, name))
             pygame.draw.rect(window, DARK_GRAY, temp_rect)
             window.blit(
@@ -74,4 +83,4 @@ def choose_map(window: pygame.Surface, maps: dict[str, list[tuple[int, int]]]) -
                 mx, my = pygame.mouse.get_pos()
                 for rect, name in buttons:
                     if rect.collidepoint(mx, my):
-                        return maps[name]
+                        return name

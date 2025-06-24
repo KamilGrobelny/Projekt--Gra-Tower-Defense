@@ -6,7 +6,7 @@ import pygame
 
 from maps import MAPS
 from settings import (
-    WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, FONT, BIG_FONT, TILE_SIZE,
+    WIDTH, HEIGHT, WHITE, DARK_GRAY, BLACK, TILE_SIZE,
     STARTING_MONEY, TOWER_COST, TOWER_LEVEL_UP_COST, ENEMY_REWARD,
     FPS, SPEED_UP_FPS, BASE_HP, MAX_SPAWN_INTERVAL, MIN_SPAWN_INTERVAL
     )
@@ -30,13 +30,19 @@ def center_text(text: pygame.Surface, box: pygame.Rect) -> tuple[int, int]:
         )
 
 
-def game_loop(window: pygame.Surface, path_tiles: list[tuple[int, int]], mode: str) -> bool:
+def game_loop(
+        window: pygame.Surface,
+        map_name: str,
+        mode: str,
+        FONT: pygame.font.Font,
+        BIG_FONT: pygame.font.Font
+        ) -> bool:
     """
     Główna pętla gry.
 
     Atrybuty:
         window: Powierzchnia do rysowania
-        path_tiles: lista kafelków ścieżki
+        map_name: nazwa aktualnej mapy
         mode: tryb gry
 
     Zwraca:
@@ -51,12 +57,7 @@ def game_loop(window: pygame.Surface, path_tiles: list[tuple[int, int]], mode: s
     textures = load_ui_textures()
     map_backgrounds = load_map_backgrounds()
 
-    for key, val in MAPS.items():
-        if path_tiles == val:
-            map_name = key
-            break
-    else:
-        map_name = list(MAPS.keys())[0]
+    path_tiles = MAPS[map_name]
 
     towers = []
     enemies = []
@@ -269,6 +270,10 @@ def game_loop(window: pygame.Surface, path_tiles: list[tuple[int, int]], mode: s
         for enemy in dying_enemies:
             if enemy.death(window):
                 dying_enemies.remove(enemy)
+            window.blit(
+                FONT.render(f'+{ENEMY_REWARD[enemy.type]}', True, WHITE),
+                (enemy.x - 15, enemy.y - 25)
+                )
 
         for tower in towers:
             tower.rotate(enemies)
